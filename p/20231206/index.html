@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='容器编排的强大工具，负责管理容器的部署、调度、伸缩等操作。比如在应对流量高峰时，可以自动扩展容器实例数量来保障服务性能，在流量低谷时又能相应收缩，节省资源。'>
+<title>Kubernetes实战</title>
+<link rel='canonical' href='https://www.colorfulgz.com/p/20231206/'>
+
+<link rel="stylesheet" href="/scss/style.min.ddca736db85fa62296cbc16390278c3c703c5350931c8a162abbc545d67c6647.css">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+        <meta name="baidu-site-verification" content="codeva-Xk4wHYYoxI" />
+        <meta name="msvalidate.01" content="348985D817128258C5763978D0B59116" /><script defer src="/script.js" data-website-id=""></script><script src="https://registry.npmmirror.com/twikoo/1.6.38/files/dist/twikoo.all.min.js" integrity="sha384-iwCuZOQXH9C9J67oqn6gT5NKj9GRVo/CY8N3mOGk1Vr4aIiAgme2gXTh7QGagg3B" crossorigin="anonymous"></script>
+        
+        <script>
+            var mainColor = '#FFA500'; 
+            document.documentElement.style.setProperty('--main-color', mainColor);
+        </script>
+    </head>
+    <body class="
+    article-page
+    "  id="top">
+        <div class="global-bg"></div>
+<div id="loader-wrapper">
+    <div id="loader"></div>
+    <div class="loader-section section-top"></div>
+    <div class="loader-section section-bottom"></div>
+</div>
+<script type="text/javascript">
+    window.onload = function () { document.body.className += ' loaded'; };
+    window.setTimeout(function () { document.body.className += ' loaded'; }, 500);
+</script>
+
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "light");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<nav class="no-copy" id="navbar">
+    <div class="nav-main">
+        <div class="title nav-left">
+            
+            <a href="/">
+                
+                <img src='/favicon.ico' width="60" height="60" alt="alt">
+            </a>
+        </div>
+        <div class="nav-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler" width="24" height="24" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+ <title id="chevronsRightIconTitle">Chevrons Right</title> <polyline points="13 7 18 12 13 17 13 17"/> <polyline points="7 7 12 12 7 17 7 17"/> </svg>
+        </div>
+        <div class="nav-center">
+            <div class="menu--commpect" id="switch">
+                <div class="menu" >
+                    
+                    
+                    
+                    <span >
+                        <a href='/archives/' >
+                            <span>归档</span>
+                        </a>
+                    </span>
+                    
+                </div>
+                <div class="page-name">Kubernetes实战</div>
+            </div>
+        </div>
+        <div class="nav-right">
+            
+            <div class="search">
+                <a href="/search/index.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                </a>
+            </div>
+            <div class="hamburger" type="button" id="toggleButton" aria-label="">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler" width="24" height="24" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<title id="hamburgerIconTitle">Menu</title> 
+<path d="M6 7L18 7M6 12L18 12M6 17L18 17"/> 
+</svg>
+
+            </div>
+            
+                <div class="dark-mode-toggle" id="dark-mode-toggle-2">
+                    <svg t="1712810451251" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7439" width="25" height="25"><path d="M512 0C227.84 0 0 227.84 0 512s227.84 512 512 512 512-227.84 512-512S796.16 0 512 0z m0 977.408V46.592c256 0 465.408 209.408 465.408 465.408S768 977.408 512 977.408z" fill="var(--icon-color-main)"></path></svg>
+                </div>
+            
+        </div>
+    </div>
+</nav>
+
+<script>
+    let lastScrollTop = 0;
+    const navbar = document.getElementById('switch');
+  
+    window.addEventListener('scroll', function() {
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  
+      if (scrollTop > lastScrollTop) {
+        
+        navbar.classList.add('hidden');
+      } else {
+        
+        navbar.classList.remove('hidden');
+      }
+      lastScrollTop = scrollTop;
+    });
+</script><div id="overlay"></div>
+        
+<aside class="left-sidebar" id="left-sidebar">
+    
+    <div class="info-widget no-copy widget--card">
+        <div class="info-bg">
+        </div>
+      
+        <div class="site-avatar">
+          <img src="/images/apple-touch-icon.png" alt="" />
+        </div>
+      
+        <div class="site-meta">
+          <p class="site-name">运维匠</p>
+          <p class="site-description">运维经验技术分享</p>
+        </div>
+        <div class="social">
+          
+        </div>
+      </div>
+      
+    <ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg t="1712835356065" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="9171" width="200" height="200"><path d="M298.666667 550.4h426.666666v-42.666667H298.666667v42.666667z m0-132.266667h426.666666v-42.666666H298.666667v42.666666z m0-136.533333h426.666666v-42.666667H298.666667v42.666667z m576 388.266667v247.466666h-725.333334v-247.466666h93.866667c4.266667 0 8.533333 0 12.8 4.266666L384 768c12.8 8.533333 25.6 12.8 38.4 12.8h183.466667c12.8 0 25.6-4.266667 38.4-12.8l128-93.866667c4.266667-4.266667 8.533333-4.266667 12.8-4.266666h89.6z m0-42.666667h-89.6c-12.8 0-25.6 4.266667-38.4 12.8l-128 93.866667c-4.266667 4.266667-8.533333 4.266667-12.8 4.266666H418.133333c-4.266667 0-8.533333 0-12.8-4.266666l-128-93.866667c-12.8-8.533333-25.6-12.8-38.4-12.8H149.333333V106.666667h725.333334v520.533333z" fill="var(--icon-color-main)" p-id="9172"></path></svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+    </ol>
+    <div class="left-bottom">
+        
+            <div class="dark-mode-toggle" id="dark-mode-toggle-1">
+                <svg t="1712810451251" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7439" width="25" height="25"><path d="M512 0C227.84 0 0 227.84 0 512s227.84 512 512 512 512-227.84 512-512S796.16 0 512 0z m0 977.408V46.592c256 0 465.408 209.408 465.408 465.408S768 977.408 512 977.408z" fill="var(--icon-color-main)"></path></svg>
+            </div>
+        
+        
+    </div>
+</aside>
+
+<div class="overlay" id="closeButton" style=""></div>
+
+        <div class="container main-container flex">
+            <main class="main article-grid">
+                <div class="article-main">
+
+    
+    
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/20231206/">
+                <img src="/p/20231206/20231210210356_huf82f5319c81c2335d855e5033f51ea01_464670_800x0_resize_box_3.png"
+                        srcset="/p/20231206/20231210210356_huf82f5319c81c2335d855e5033f51ea01_464670_800x0_resize_box_3.png 800w, /p/20231206/20231210210356_huf82f5319c81c2335d855e5033f51ea01_464670_1600x0_resize_box_3.png 1600w"
+                        width="800" 
+                        height="461" 
+                        loading="lazy"
+                        alt="Featured image of post Kubernetes实战" />
+                
+            </a>
+            
+            
+                <a href="https://www.yuankun.cc/p/20231206/20231210210356_huf82f5319c81c2335d855e5033f51ea01_464670_1600x0_resize_box_3.png" title="封面来源" class="cover-url">
+                    <svg t="1720510544804" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4274" width="200" height="200"><path d="M607.934444 417.856853c-6.179746-6.1777-12.766768-11.746532-19.554358-16.910135l-0.01228 0.011256c-6.986111-6.719028-16.47216-10.857279-26.930349-10.857279-21.464871 0-38.864146 17.400299-38.864146 38.864146 0 9.497305 3.411703 18.196431 9.071609 24.947182l-0.001023 0c0.001023 0.001023 0.00307 0.00307 0.005117 0.004093 2.718925 3.242857 5.953595 6.03853 9.585309 8.251941 3.664459 3.021823 7.261381 5.997598 10.624988 9.361205l3.203972 3.204995c40.279379 40.229237 28.254507 109.539812-12.024871 149.820214L371.157763 796.383956c-40.278355 40.229237-105.761766 40.229237-146.042167 0l-3.229554-3.231601c-40.281425-40.278355-40.281425-105.809861 0-145.991002l75.93546-75.909877c9.742898-7.733125 15.997346-19.668968 15.997346-33.072233 0-23.312962-18.898419-42.211381-42.211381-42.211381-8.797363 0-16.963347 2.693342-23.725354 7.297197-0.021489-0.045025-0.044002-0.088004-0.066515-0.134053l-0.809435 0.757247c-2.989077 2.148943-5.691629 4.669346-8.025791 7.510044l-78.913281 73.841775c-74.178443 74.229608-74.178443 195.632609 0 269.758863l3.203972 3.202948c74.178443 74.127278 195.529255 74.127278 269.707698 0l171.829484-171.880649c74.076112-74.17435 80.357166-191.184297 6.282077-265.311575L607.934444 417.856853z" p-id="4275"></path><path d="M855.61957 165.804257l-3.203972-3.203972c-74.17742-74.178443-195.528232-74.178443-269.706675 0L410.87944 334.479911c-74.178443 74.178443-78.263481 181.296089-4.085038 255.522628l3.152806 3.104711c3.368724 3.367701 6.865361 6.54302 10.434653 9.588379 2.583848 2.885723 5.618974 5.355985 8.992815 7.309476 0.025583 0.020466 0.052189 0.041956 0.077771 0.062422l0.011256-0.010233c5.377474 3.092431 11.608386 4.870938 18.257829 4.870938 20.263509 0 36.68962-16.428158 36.68962-36.68962 0-5.719258-1.309832-11.132548-3.645017-15.95846l0 0c-4.850471-10.891048-13.930267-17.521049-20.210297-23.802102l-3.15383-3.102664c-40.278355-40.278355-24.982998-98.79612 15.295358-139.074476l171.930791-171.830507c40.179095-40.280402 105.685018-40.280402 145.965419 0l3.206018 3.152806c40.279379 40.281425 40.279379 105.838513 0 146.06775l-75.686796 75.737962c-10.296507 7.628748-16.97358 19.865443-16.97358 33.662681 0 23.12365 18.745946 41.87062 41.87062 41.87062 8.048303 0 15.563464-2.275833 21.944801-6.211469 0.048095 0.081864 0.093121 0.157589 0.141216 0.240477l1.173732-1.083681c3.616364-2.421142 6.828522-5.393847 9.529027-8.792247l79.766718-73.603345C929.798013 361.334535 929.798013 239.981676 855.61957 165.804257z" p-id="4276"></path></svg>
+                </a>
+            
+            
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/" >
+                云原生
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/20231206/">Kubernetes实战</a>
+        </h2>
+        
+        <h3 class="article-subtitle">
+            容器编排的强大工具，负责管理容器的部署、调度、伸缩等操作。比如在应对流量高峰时，可以自动扩展容器实例数量来保障服务性能，在流量低谷时又能相应收缩，节省资源。
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Dec 06, 2023</time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    
+    
+    <h2 id="pod">POD</h2>
+<h3 id="运行-pod">运行 POD</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 命令格式： kubectl run (pod控制器名称) [参数]</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># --image  指定Pod的镜像</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># --port   指定端口</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># --namespace  指定namespace</span>
+</span></span><span class="line"><span class="cl">kubectl run nginx --image<span class="o">=</span>nginx:latest --port<span class="o">=</span><span class="m">80</span> --namespace dev
+</span></span></code></pre></div><h3 id="pod-环境变量">POD 环境变量</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">apiVersion: apps/v1
+</span></span><span class="line"><span class="cl">kind: Deployment
+</span></span><span class="line"><span class="cl">metadata:
+</span></span><span class="line"><span class="cl">  creationTimestamp: null
+</span></span><span class="line"><span class="cl">  labels:
+</span></span><span class="line"><span class="cl">    app: mysql-env-pod
+</span></span><span class="line"><span class="cl">  name: mysql-env-pod
+</span></span><span class="line"><span class="cl">  namespace: app-dev
+</span></span><span class="line"><span class="cl">spec:
+</span></span><span class="line"><span class="cl">  replicas: <span class="m">1</span>
+</span></span><span class="line"><span class="cl">  selector:
+</span></span><span class="line"><span class="cl">    matchLabels:
+</span></span><span class="line"><span class="cl">      app: mysql-env-pod
+</span></span><span class="line"><span class="cl">  template:
+</span></span><span class="line"><span class="cl">    metadata:
+</span></span><span class="line"><span class="cl">      creationTimestamp: null
+</span></span><span class="line"><span class="cl">      labels:
+</span></span><span class="line"><span class="cl">        app: mysql-env-pod
+</span></span><span class="line"><span class="cl">    spec:
+</span></span><span class="line"><span class="cl">      containers:
+</span></span><span class="line"><span class="cl">      - image: images.io:5000/app/mysql
+</span></span><span class="line"><span class="cl">        name: mysql
+</span></span><span class="line"><span class="cl">        env:
+</span></span><span class="line"><span class="cl">        - name: MYSQL_ROOT_PASSWORD
+</span></span><span class="line"><span class="cl">          value: <span class="s2">&#34;123456&#34;</span>
+</span></span><span class="line"><span class="cl">        ports:
+</span></span><span class="line"><span class="cl">        - containerPort: <span class="m">3306</span>
+</span></span></code></pre></div><h3 id="查看-pod-信息">查看 POD 信息</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 查看Pod基本信息</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>root@master ~<span class="o">]</span><span class="c1"># kubectl get pods -n dev</span>
+</span></span><span class="line"><span class="cl">NAME    READY   STATUS    RESTARTS   AGE
+</span></span><span class="line"><span class="cl">nginx   1/1     Running   <span class="m">0</span>          43s
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 查看Pod的详细信息</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>root@master ~<span class="o">]</span><span class="c1"># kubectl describe pod nginx -n dev</span>
+</span></span></code></pre></div><h3 id="删除-pod">删除 POD</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl delete pod nginx -n dev
+</span></span></code></pre></div><h3 id="配置操作">配置操作</h3>
+<p>创建一个 pod-nginx.yaml，内容如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">apiVersion: v1
+</span></span><span class="line"><span class="cl">kind: Pod
+</span></span><span class="line"><span class="cl">metadata:
+</span></span><span class="line"><span class="cl">  name: nginx
+</span></span><span class="line"><span class="cl">  namespace: dev
+</span></span><span class="line"><span class="cl">spec:
+</span></span><span class="line"><span class="cl">  containers:
+</span></span><span class="line"><span class="cl">  - image: nginx:latest
+</span></span><span class="line"><span class="cl">    name: pod
+</span></span><span class="line"><span class="cl">    ports:
+</span></span><span class="line"><span class="cl">    - name: nginx-port
+</span></span><span class="line"><span class="cl">      containerPort: <span class="m">80</span>
+</span></span><span class="line"><span class="cl">      protocol: TCP
+</span></span></code></pre></div><h2 id="configmap">ConfigMap</h2>
+<p>创建 ConfigMap 对象的方法有两种</p>
+<p>命令式命令</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">1.字面量：kubectl create configmap NAME --from-literal<span class="o">=</span><span class="nv">key1</span><span class="o">=</span>value1
+</span></span><span class="line"><span class="cl">2.从文件加载：kubectl create configmap NAME --from-file<span class="o">=[</span><span class="nv">key</span><span class="o">=]</span>/PATH/TO/FILE
+</span></span><span class="line"><span class="cl">3.从目录加载： kubectl create configmap NAME --from-file<span class="o">=[</span><span class="nv">key</span><span class="o">=]</span>/PATH/TO/DIR/
+</span></span></code></pre></div><p>配置文件</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">1.命令式：kubectl create -f
+</span></span><span class="line"><span class="cl">2.声明式：kubectl apply -f
+</span></span></code></pre></div><p>提示：基于文件内容生成时，可以使用命令式命令以 dry-run 模式生成并保存</p>
+<p>查看帮助</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl create configmap -h
+</span></span></code></pre></div><p>案例 1：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl create configmap my-cm --from-literal<span class="o">=</span><span class="s1">&#39;test.html&#39;</span><span class="o">=</span><span class="s1">&#39;this is nignx&#39;</span> --dry-run<span class="o">=</span>client -o yaml &gt; my-cm.yaml
+</span></span></code></pre></div><p>文件内容</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">apiVersion: v1
+</span></span><span class="line"><span class="cl">data:
+</span></span><span class="line"><span class="cl">  test.html: this is nignx
+</span></span><span class="line"><span class="cl">kind: ConfigMap
+</span></span><span class="line"><span class="cl">metadata:
+</span></span><span class="line"><span class="cl">  creationTimestamp: null
+</span></span><span class="line"><span class="cl">  name: my-cm
+</span></span></code></pre></div><p>案例 2：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl create cm my-cm2 --from-file<span class="o">=</span>./map.txt --dry-run<span class="o">=</span>client -o yaml &gt;my-cm2.yaml
+</span></span></code></pre></div><p>文件内容</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">apiVersion: v1
+</span></span><span class="line"><span class="cl">data:
+</span></span><span class="line"><span class="cl">  map.txt: <span class="p">|</span>
+</span></span><span class="line"><span class="cl">    configmap
+</span></span><span class="line"><span class="cl">kind: ConfigMap
+</span></span><span class="line"><span class="cl">metadata:
+</span></span><span class="line"><span class="cl">  creationTimestamp: null
+</span></span><span class="line"><span class="cl">  name: my-cm2
+</span></span></code></pre></div><h3 id="引用-configmap-对象">引用 ConfigMap 对象</h3>
+<p>ConfigMap 资源对象中以 key-value 保存的数据，在 Pod 中引用的方式通常有两种</p>
+<ul>
+<li>环境变量</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">1.引用ConfigMap对象上特定的key，以valueFrom赋值给Pod上指定的环境变量
+</span></span><span class="line"><span class="cl">2.在Pod上使用envFrom一次性导入ConfigMap对象上的所有key-value，key（也可以统一附加特定前缀）即为环境变量名，value自动成为相应的变量值
+</span></span></code></pre></div><ul>
+<li>configMap 卷</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">1.在Pod上将ConfigMap对象引用为存储卷，而后整体由容器mount至某个目录下<span class="p">;</span>key转为文件名，value即为相应的文件内容
+</span></span><span class="line"><span class="cl">2.在Pod上定义configMap卷时，仅引用其中的部分key，而后由容器mount至目录下
+</span></span><span class="line"><span class="cl">3.在容器上仅mount configMap卷上指定的key
+</span></span></code></pre></div><h3 id="在-pod-上配置使用-configmap-示例">在 Pod 上配置使用 ConfigMap 示例</h3>
+<p>1.通过存储卷引用</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">apiVersion: apps/v1
+</span></span><span class="line"><span class="cl">kind: Deployment
+</span></span><span class="line"><span class="cl">metadata:
+</span></span><span class="line"><span class="cl">  labels:
+</span></span><span class="line"><span class="cl">    app: my-dep
+</span></span><span class="line"><span class="cl">  name: my-dep
+</span></span><span class="line"><span class="cl">spec:
+</span></span><span class="line"><span class="cl">  replicas: <span class="m">1</span>
+</span></span><span class="line"><span class="cl">  selector:
+</span></span><span class="line"><span class="cl">    matchLabels:
+</span></span><span class="line"><span class="cl">      app: my-dep
+</span></span><span class="line"><span class="cl">  template:
+</span></span><span class="line"><span class="cl">    metadata:
+</span></span><span class="line"><span class="cl">      labels:
+</span></span><span class="line"><span class="cl">        app: my-dep
+</span></span><span class="line"><span class="cl">    spec:
+</span></span><span class="line"><span class="cl">      containers:
+</span></span><span class="line"><span class="cl">      - image: nginx:latest
+</span></span><span class="line"><span class="cl">        name: nginx
+</span></span><span class="line"><span class="cl">        ports:
+</span></span><span class="line"><span class="cl">        - containerPort: <span class="m">80</span>
+</span></span><span class="line"><span class="cl">        volumeMounts:
+</span></span><span class="line"><span class="cl">        - name: my-cm-configmap  <span class="c1"># 卷名称</span>
+</span></span><span class="line"><span class="cl">          mountPath: /usr/share/nginx/html/  <span class="c1"># 容器内挂载路径</span>
+</span></span><span class="line"><span class="cl">          readOnly: <span class="nb">true</span>  <span class="c1"># 只读  否</span>
+</span></span><span class="line"><span class="cl">      volumes:
+</span></span><span class="line"><span class="cl">      - name: my-cm-configmap  <span class="c1"># 卷名称</span>
+</span></span><span class="line"><span class="cl">        configMap:
+</span></span><span class="line"><span class="cl">          name: my-cm <span class="c1"># configmap名称</span>
+</span></span><span class="line"><span class="cl">          optional: <span class="nb">false</span>
+</span></span></code></pre></div><p>2.通过环境变量引用</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">apiVersion: apps/v1
+</span></span><span class="line"><span class="cl">kind: Deployment
+</span></span><span class="line"><span class="cl">metadata:
+</span></span><span class="line"><span class="cl">  labels:
+</span></span><span class="line"><span class="cl">    app: my-dep
+</span></span><span class="line"><span class="cl">  name: my-dep
+</span></span><span class="line"><span class="cl">spec:
+</span></span><span class="line"><span class="cl">  replicas: <span class="m">1</span>
+</span></span><span class="line"><span class="cl">  selector:
+</span></span><span class="line"><span class="cl">    matchLabels:
+</span></span><span class="line"><span class="cl">      app: my-dep
+</span></span><span class="line"><span class="cl">  template:
+</span></span><span class="line"><span class="cl">    metadata:
+</span></span><span class="line"><span class="cl">      labels:
+</span></span><span class="line"><span class="cl">        app: my-dep
+</span></span><span class="line"><span class="cl">    spec:
+</span></span><span class="line"><span class="cl">      containers:
+</span></span><span class="line"><span class="cl">      - image: nginx:latest
+</span></span><span class="line"><span class="cl">        name: nginx
+</span></span><span class="line"><span class="cl">        ports:
+</span></span><span class="line"><span class="cl">        - containerPort: <span class="m">80</span>
+</span></span><span class="line"><span class="cl">        env:
+</span></span><span class="line"><span class="cl">        - name: PORT
+</span></span><span class="line"><span class="cl">          valueFrom:
+</span></span><span class="line"><span class="cl">            configMapKeyRef:
+</span></span><span class="line"><span class="cl">              name: my-cm
+</span></span><span class="line"><span class="cl">              key: <span class="s1">&#39;test.html&#39;</span>
+</span></span><span class="line"><span class="cl">              optional: <span class="nb">false</span>
+</span></span></code></pre></div><h2 id="secret">Secret</h2>
+<h3 id="secret-资源">secret 资源</h3>
+<p>1.Secret 主要用于存储密钥、OAuth 令牌和 SSH 密钥等敏感信息，这些敏感信息采用 base64 编码保存，略好于明文存储<br>
+2.Secret 根据其用途等，还有类型上的区分</p>
+<p><a href="/upload/image-20230623233805770.png" data-lightbox="image">
+<img src="/upload/image-20230623233805770.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image-20230623233805770"
+	
+>
+</a></p>
+<h3 id="创建-secret-资源">创建 Secret 资源</h3>
+<p>支持类似于 ConfigMap 的创建方式，但 Secret 有类型子命令，而且不同类型在 data 或 stringData 字段中支持嵌套使用的 key 亦会有所有同</p>
+<p>命令式命令</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1">#generic</span>
+</span></span><span class="line"><span class="cl">1.kubectl create secret generic NAME <span class="o">[</span>--type<span class="o">=</span>string<span class="o">]</span> <span class="o">[</span>--from-file<span class="o">=[</span><span class="nv">key</span><span class="o">=]</span>source<span class="o">]</span> <span class="o">[</span>--from-literal<span class="o">=</span><span class="nv">key1</span><span class="o">=</span>value1<span class="o">]</span>
+</span></span><span class="line"><span class="cl">2.除了后面docker-registry和tls命令之外的其它类型，都可以使用该命令中的--type选项进行定义，但有些类型有key的特定要求
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#tls</span>
+</span></span><span class="line"><span class="cl">1.kubectl create secret tls NAME --cert<span class="o">=</span>path/to/cert/file --key<span class="o">=</span>path/to/key/file
+</span></span><span class="line"><span class="cl">2.通常，其保存cert文件内容的key为tls.crt，而保存private key的key为tls.key
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#docker-registry</span>
+</span></span><span class="line"><span class="cl">1.kubectl create secret docker-registry NAME --docker-username<span class="o">=</span>user --docker-password<span class="o">=</span>password --docker-email<span class="o">=</span>email <span class="o">[</span>--docker-server<span class="o">=</span>string<span class="o">]</span> <span class="o">[</span>--from-file<span class="o">=[</span><span class="nv">key</span><span class="o">=]</span>source<span class="o">]</span>
+</span></span><span class="line"><span class="cl">2.通常，从已有的json格式的文件加载生成的就是dockerconfigjson类型，命令行直接量生成的也是该类型
+</span></span></code></pre></div><h3 id="资源示例">资源示例</h3>
+<ul>
+<li>命令式</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl create secret generic mysql-root-auth --from-literal<span class="o">=</span><span class="nv">username</span><span class="o">=</span>root --from-literal<span class="o">=</span><span class="nv">passwd</span><span class="o">=</span><span class="m">123456</span> --dry-run<span class="o">=</span>client -o yaml
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">kubectl create secret tls my-tls --cert<span class="o">=</span>./itshare.crt --key<span class="o">=</span>./itshare.key --dry-run<span class="o">=</span>client -o yaml
+</span></span></code></pre></div><ul>
+<li>配置文件</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">apiVersion: v1
+</span></span><span class="line"><span class="cl">data:
+</span></span><span class="line"><span class="cl">  passwd: MTIzNDU2
+</span></span><span class="line"><span class="cl">  username: <span class="nv">cm9vdA</span><span class="o">==</span>
+</span></span><span class="line"><span class="cl">kind: Secret
+</span></span><span class="line"><span class="cl">metadata:
+</span></span><span class="line"><span class="cl">  name: mysql-root-auth
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">apiVersion: v1
+</span></span><span class="line"><span class="cl">data:
+</span></span><span class="line"><span class="cl">  tls.crt: <span class="nv">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURFVENDQWZrQ0ZEVjRpUFhjNlNIelR4a2NzdEwzTFUxRFRzTmNNQTBHQ1NxR1NJYjNEUUVCQ3dVQU1FVXgKQ3pBSkJnTlZCQVlUQWtGVk1STXdFUVlEVlFRSURBcFRiMjFsTFZOMFlYUmxNU0V3SHdZRFZRUUtEQmhKYm5SbApjbTVsZENCWGFXUm5hWFJ6SUZCMGVTQk1kR1F3SGhjTk1qTXdOakl6TVRZeU1qQTJXaGNOTWpRd05qSXlNVFl5Ck1qQTJXakJGTVFzd0NRWURWUVFHRXdKQlZURVRNQkVHQTFVRUNBd0tVMjl0WlMxVGRHRjBaVEVoTUI4R0ExVUUKQ2d3WVNXNTBaWEp1WlhRZ1YybGtaMmwwY3lCUWRIa2dUSFJrTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQwpBUThBTUlJQkNnS0NBUUVBelFPZEZodlNlejJVNEZVK3lIaU1qT3BCWHhVd0RiV1NScW5GaUFMenc3OFk0bmx1Cmw3MFFzeGlTNEdndFJKK1JwZlRuSEF5RTVmNUxnS2lCc0U1WS9IdlQ5NDZSWEZZYVEyOTBNYTNSbFY3b3V3ODMKUmVTZmg0ZWI2cmlKVW00eVBYaUxUZHRmNXF2K2FuZGtFdVZ1VlFaMUpOVUxoRFF0dzRFQ1J4eURvc0s1R1VHVApmYVpGczByVUdMQTV1Ui8zVHM2b1hxWnowUkZYVC9lU29JbEFnMVplckpHd0FlNTNhWllvdm9ERi9Ja2lubldOCjB3Y2dQSWl4R1RtdU9iQ0NPS3k1bk8xMnJ5NGtFa3djRWRkSkQ2S3JKYkdYNkg3VWNXV3VvQkxUUDhoVEgxTjEKNUtIVmtJZ0U2a3h4RHpVeUtNb3FhekZ3M0MrVUp5U0pEZHVnb3dJREFRQUJNQTBHQ1NxR1NJYjNEUUVCQ3dVQQpBNElCQVFBcE40OHlWTml3RnR4TEZ5V3ZVTmdQRWZLc0c1M3M2bGR4RjRLNk84Wm44ODAzR2tUR0o3MnkrSFVICjJTZkpPV3hyRnVzdysrZ2ZONjBPV0FZbnF5RzkvREttczJsUTFabmw1QU8wUWpxM0NqZkl2ODV4Q2VuQWVsdngKYktrZjFPR1lSNTBHZFl4TGYwMEFaVzhBSFBvOFkvRDBEL2phVXN1OEhsVnFhSWF6SmpTSldpZkFWcFh0cXpaeQp2ZDVWTWRST3diNWdhWWZhRjJVWDZLSlFpemF1K2hzV2ZWOGkzRnNMY2w1YWJmYnkyNUROTlUwVHZYU3V3ckVwCnZBSDNMU2hJeGtRQzU0REc3TDM0WFJ6Q1hkN3U4QkR3U1JaczQzSkxwQ1JKR1RGc0hvNnFPaFdEVFBSa0xDcTUKbGt4bG5FbUNTMFdPWHhRVGRGYUdpN0ZIMVBSLwotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg</span><span class="o">==</span>
+</span></span><span class="line"><span class="cl">  tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2Z0lCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQktnd2dnU2tBZ0VBQW9JQkFRRE5BNTBXRzlKN1BaVGcKVlQ3SWVJeU02a0ZmRlRBTnRaSkdxY1dJQXZQRHZ4amllVzZYdlJDekdKTGdhQzFFbjVHbDlPY2NESVRsL2t1QQpxSUd3VGxqOGU5UDNqcEZjVmhwRGIzUXhyZEdWWHVpN0R6ZEY1SitIaDV2cXVJbFNiakk5ZUl0TjIxL21xLzVxCmQyUVM1VzVWQm5VazFRdUVOQzNEZ1FKSEhJT2l3cmtaUVpOOXBrV3pTdFFZc0RtNUgvZE96cWhlcG5QUkVWZFAKOTVLZ2lVQ0RWbDZza2JBQjduZHBsaWkrZ01YOGlTS2VkWTNUQnlBOGlMRVpPYTQ1c0lJNHJMbWM3WGF2TGlRUwpUQndSMTBrUG9xc2xzWmZvZnRSeFphNmdFdE0veUZNZlUzWGtvZFdRaUFUcVRIRVBOVElveWlwck1YRGNMNVFuCkpJa04yNkNqQWdNQkFBRUNnZ0VCQU1kdUpIbEZSMU1yYkk5dFhVMldOdU05WGFvbzZqM3J5d2VDVHUwb01nalEKOUZ3YTFFSTNZTzlYa0VsTURmMGJYSXViMk5Xb04vK2poNzc0TEhCZFJxTVZzZlMzY3gvbmdsVG5McGpGQllQUQpkNFRBSUh5VkVicTlhQ2JFckpETE1ZUXFweGh0dHJTbHl5KzJSRnM5WkQ3QnNXTEsvQkQyMFMzRmFYblRleG52Cm94Tk42ZFhNMHhZU09MZ2pWNGdEd1VJUUlvNW02TmFadkVHbkNxck9hbDdad0FodmVFeFVpbUU3WUFldVF6dnMKYjE3NWZPOTdLT1hjblAyQm0zUm5SenYwNlNSVmJSdURTdlovamtGUTVJUG9uMUZ6TlJBWm5nYVZ6UldkTUVYbQoySnZPUmptQ3BCbTNvNVpjbUFIaitIQWoxa3l3Qy9SMkhyTU1FeG82Y1lFQ2dZRUE5L2VjZGJKem4zd0pZK0dBCnQ0WS9wRFhnUitpQkNwQnVYTkxubU5VZDJycnJJTXNYWnoyMGlUeVAxL0gwRWl2Q3pLSm9nYnljK2lXUFE2LzIKRVFrcXVIaXoyOGVpaU1DYmUyQVdYUUpTQnpoSy9YM0hWc2V5ckRsRnJyTmZ4SzVxYzVhTUZRbzNGM2tRMVRVUgpyZDczSFkrcWZWMHRHVVhYVlZRd0JkZ2Q3ZmtDZ1lFQTA2ZksrSE0vRS9FQ201TDdKYUoycVgwbmFVMDJzbmxqCjZCbUhDenNVY3EwQUMvdVFrMkJkTFJXbHBlSnU2VXRFU0dIWm1hZ0Fua3VpNTVxdFhTeG1VdGdjOURnTWtleHoKZU9OQkFNQnUrTFRpYVRqeWE0VG5GYjh4YmJaZUtRN2hiYzJQMDdMMjhZRmxxRDg4VDV4VFRpNUs2L3dJclNZWAo2MlJmRytlSEduc0NnWUVBd0JzWUh1TDZ5c01ZcjBYa0o4cWRBWVl2MU9YZkd5VWNLMVBGMDFUQWhWV3NsY0poCnhqMDY0ZHVHZ1VGVTJzTUdidTBmMCtzaEhuYjh6KzdCeng3djl1eWtReEFkN3A1eGxwcXhtS3NVaTcxajg1Ri8KWHM3bHNLSEtSM2QyS1hVS3liUUhvTUZDUHpBdkIwN08vSW94bnJoUDJFSFlqNnpaRDZWaWN4U2swMWtDZ1lBTgo4czNtaDduTmQ2R2pYUkZlRHBIaFk1VVlWSFZaVjdTazFDSFpOS0NKV2l0Wm5zK05WdGx0SWpNVGRwTzJualkyCnl2UUxNMDR2SUc3dzhubWdYVSswLy9jUWhTMFc1TTFMVnphdWRRQWJOZGlCOUxYTkxpb0lmZHdsRGRLd3hBRkoKT2pYVFRzVUZiM0Npb09BNW91UytqMEJ5d3Q1VGd1SXFxaWUyY0JDd1J3S0JnRTM3dWpSN0JHYVI2ZU4xLzh4QwpHUlZ3K2MrSU9yV044YmhONHBGYjNHYU1ELytiaUZmK1BVaXZNMzZzUDAzNnphSno1QnF6NXJILzhKSjZwUmthClUzYzlwKzg2Rk5PU2YrU09KaVhHdko5dkc2Wk5kKzBsUkJXTHRkUUVhZE0va29Sd0c2c3d1bWsyRUROWE9Jd1cKZHV4bFZtdUpENEdhNDU2WDFTejRTMGFiCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K
+</span></span><span class="line"><span class="cl">kind: Secret
+</span></span><span class="line"><span class="cl">metadata:
+</span></span><span class="line"><span class="cl">  creationTimestamp: null
+</span></span><span class="line"><span class="cl">  name: my-tls
+</span></span><span class="line"><span class="cl">type: kubernetes.io/tls
+</span></span></code></pre></div><h3 id="引用-secret-对象">引用 Secret 对象</h3>
+<p>Secret 资源在 Pod 中引用的方式同样有两种</p>
+<ul>
+<li>环境变量</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">1.引用Secret对象上特定的key，以valueFrom赋值给Pod上指定的环境变量
+</span></span><span class="line"><span class="cl">2.在Pod上使用envFrom一次性导入Secret对象上的所有key-value，key（也可以统一附加特定前缀）即为环境变量名，value自动成为相应的变量值
+</span></span></code></pre></div><ul>
+<li>secret 卷</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">1.在Pod上将Secret对象引用为存储卷，而后整体由容器mount至某个目录下key转为文件名，value即为相应的文件内容
+</span></span><span class="line"><span class="cl">2.在Pod上定义Secret卷时，仅引用其中的部分key，而后由容器mount至目录下
+</span></span><span class="line"><span class="cl">3.在容器上仅mount Secret卷上指定的key
+</span></span></code></pre></div><p>注意：容器很可能会将环境变量打印到日志中，因而不建议以环境变量方式引用 Secret 中的数据</p>
+<h3 id="在-pod-上引用-secret-的示例">在 Pod 上引用 Secret 的示例</h3>
+<ul>
+<li>在 Pod 上引用 Secret 资源</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">apiVersion: apps/v1
+</span></span><span class="line"><span class="cl">kind: Deployment
+</span></span><span class="line"><span class="cl">metadata:
+</span></span><span class="line"><span class="cl">  labels:
+</span></span><span class="line"><span class="cl">    app: my-dep
+</span></span><span class="line"><span class="cl">  name: my-dep
+</span></span><span class="line"><span class="cl">spec:
+</span></span><span class="line"><span class="cl">  replicas: <span class="m">1</span>
+</span></span><span class="line"><span class="cl">  selector:
+</span></span><span class="line"><span class="cl">    matchLabels:
+</span></span><span class="line"><span class="cl">      app: my-dep
+</span></span><span class="line"><span class="cl">  template:
+</span></span><span class="line"><span class="cl">    metadata:
+</span></span><span class="line"><span class="cl">      labels:
+</span></span><span class="line"><span class="cl">        app: my-dep
+</span></span><span class="line"><span class="cl">    spec:
+</span></span><span class="line"><span class="cl">      containers:
+</span></span><span class="line"><span class="cl">      - image: nginx:latest
+</span></span><span class="line"><span class="cl">        name: nginx
+</span></span><span class="line"><span class="cl">        ports:
+</span></span><span class="line"><span class="cl">        - containerPort: <span class="m">80</span>
+</span></span><span class="line"><span class="cl">        volumeMounts:
+</span></span><span class="line"><span class="cl">        - name: my-secret
+</span></span><span class="line"><span class="cl">          mountPath: /etc/nginx/certs/
+</span></span><span class="line"><span class="cl">          readOnly: <span class="nb">true</span>
+</span></span><span class="line"><span class="cl">      volumes:
+</span></span><span class="line"><span class="cl">      - name: my-secret
+</span></span><span class="line"><span class="cl">        secret:
+</span></span><span class="line"><span class="cl">          secretName: my-tls  <span class="c1"># secret 名称</span>
+</span></span></code></pre></div>
+</section>
+
+
+    <footer class="article-footer">
+    
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title"></h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image no-copy">
+    <a href="/p/250110/">
+        
+        
+            <div class="article-image">
+                <img src="/p/250110/index.4b73b7234f8aed01955591d74ed2a711_hu32955b812d1006d3ea7bcb6e13a1ca94_144678_700x420_fill_box_smart1_3.png" 
+                        width="700" 
+                        height="420" 
+                        loading="lazy"
+                        alt="Featured image of post NFS动态提供Kubernetes后端存储卷(NFS Client Provisioner)"
+                        data-key="250110" 
+                        data-hash="md5-S3O3I0&#43;K7QGVVZHXTtKnEQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">NFS动态提供Kubernetes后端存储卷(NFS Client Provisioner)</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image no-copy">
+    <a href="/p/250109/">
+        
+        
+            <div class="article-image">
+                <img src="/p/250109/index.ed208947c643f9db7d3175230cdf210b_hu83f0d3e5546af4775fd452b834ce817e_72494_700x420_fill_box_smart1_3.png" 
+                        width="700" 
+                        height="420" 
+                        loading="lazy"
+                        alt="Featured image of post 1分钟配置Kubectl命令自动补全功能"
+                        data-key="250109" 
+                        data-hash="md5-7SCJR8ZD&#43;dt9MXUjDN8hCw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">1分钟配置Kubectl命令自动补全功能</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image no-copy">
+    <a href="/p/250108/">
+        
+        
+            <div class="article-image">
+                <img src="/p/250108/index.d20e49d8c22da735919e9281fcac64c5_hub8466684b472b0babce73b9d19dde495_291404_700x420_fill_box_smart1_3.png" 
+                        width="700" 
+                        height="420" 
+                        loading="lazy"
+                        alt="Featured image of post kubernetes 部署gitlab"
+                        data-key="250108" 
+                        data-hash="md5-0g5J2MItpzWRnpKB/KxkxQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">kubernetes 部署gitlab</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image no-copy">
+    <a href="/p/2024122801/">
+        
+        
+            <div class="article-image">
+                <img src="/p/2024122801/index.3dd660b7cbd034277f0703d00132c850_hu577bcdfe50a970670accc4c7e4653423_55389_700x420_fill_q75_box_smart1.jpg" 
+                        width="700" 
+                        height="420" 
+                        loading="lazy"
+                        alt="Featured image of post kubernetes 如何避免滚动更新时服务中断"
+                        data-key="2024122801" 
+                        data-hash="md5-PdZgt8vQNCd/BwPQATLIUA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">kubernetes 如何避免滚动更新时服务中断</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image no-copy">
+    <a href="/p/2024122601/">
+        
+        
+            <div class="article-image">
+                <img src="/p/2024122601/cloud.2748e12161426b0ce32919e47a4f59fd_hu26b4ff2c5f4e80c16b83cdd5c401a19e_26382_700x420_fill_box_smart1_3.png" 
+                        width="700" 
+                        height="420" 
+                        loading="lazy"
+                        alt="Featured image of post Kubernetes详细教程"
+                        data-key="2024122601" 
+                        data-hash="md5-J0jhIWFCawzjKRnkek9Z/Q==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Kubernetes详细教程</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        <script>
+  twikoo.init({
+    envId: "",
+    el: "#tcomment",
+  });
+</script>
+    
+    <div id="skip">
+        <div class="skip-top">
+          <a href="#top" class="skip-top" title="返回顶部">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<title id="chevronUpIconTitle">返回顶部</title> 
+<polyline points="6 14 12 8 18 14 18 14"/> 
+</svg>
+          </a>
+        </div>
+        
+    </div>
+    <script>
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        const scrollToggleBtn = document.querySelector('#skip');
+
+        const handleScrollDebounced = debounce(function() {
+            scrollToggleBtn.classList.remove('hidden');
+        }, 1000);
+
+        window.addEventListener('scroll', () => {
+            scrollToggleBtn.classList.add('hidden');
+            handleScrollDebounced();
+        });
+    </script>
+
+                    <script type="text/javascript" src="/ts/main.js" defer></script>
+
+  <script src="/js/lightbox-plus-jquery.js"></script>
+
+  <script src="/js/pieces.js"></script>
+
+  <script src="/js/twikoo.js"></script>
+
+
+
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+                </div>
+                
+                    <div class="article-sidebar">
+                        <aside class="right-sidebar">
+    <form action="/search/" class="search-form" >
+        <p>
+            <input name="keyword" required placeholder="" />
+        
+            <button title="">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+            </button>
+        </p>
+    </form>
+    <div class="info-widget no-copy widget--card">
+    <div class="info-bg">
+    </div>
+  
+    <div class="site-avatar">
+      <img src="/images/apple-touch-icon.png" alt="" />
+    </div>
+  
+    <div class="site-meta">
+      <p class="site-name">运维匠</p>
+      <p class="site-description">运维经验技术分享</p>
+    </div>
+    <div class="social">
+      
+      
+    </div>
+  </div>
+    
+
+    <div class="sticky">
+  
+<div class="widget--toc no-copy">
+  <h2>📑 目录</h2>
+  <nav id="TableOfContents">
+  <ol>
+    <li><a href="#pod">POD</a>
+      <ol>
+        <li><a href="#运行-pod">运行 POD</a></li>
+        <li><a href="#pod-环境变量">POD 环境变量</a></li>
+        <li><a href="#查看-pod-信息">查看 POD 信息</a></li>
+        <li><a href="#删除-pod">删除 POD</a></li>
+        <li><a href="#配置操作">配置操作</a></li>
+      </ol>
+    </li>
+    <li><a href="#configmap">ConfigMap</a>
+      <ol>
+        <li><a href="#引用-configmap-对象">引用 ConfigMap 对象</a></li>
+        <li><a href="#在-pod-上配置使用-configmap-示例">在 Pod 上配置使用 ConfigMap 示例</a></li>
+      </ol>
+    </li>
+    <li><a href="#secret">Secret</a>
+      <ol>
+        <li><a href="#secret-资源">secret 资源</a></li>
+        <li><a href="#创建-secret-资源">创建 Secret 资源</a></li>
+        <li><a href="#资源示例">资源示例</a></li>
+        <li><a href="#引用-secret-对象">引用 Secret 对象</a></li>
+        <li><a href="#在-pod-上引用-secret-的示例">在 Pod 上引用 Secret 的示例</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+</div>
+
+  <div class="random-posts widget--card">
+    <h2>📄 随机文章</h2>
+    <button id="random-btn" onclick="loadRandomPosts()" class="">
+        <svg role="img" xmlns="http://www.w3.org/2000/svg" width="48px" height="48px" viewBox="0 0 24 24" aria-labelledby="refreshIconTitle" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" fill="none">
+<polyline points="22 12 19 15 16 12"/> 
+<path d="M11,20 C6.581722,20 3,16.418278 3,12 C3,7.581722 6.581722,4 11,4 C15.418278,4 19,7.581722 19,12 L19,14"/> 
+</svg>
+    </button>
+    <div id="random-posts"></div>
+</div>
+
+<script>
+    function loadRandomPosts() {
+        const btn = document.getElementById('random-btn');
+        btn.classList.add('rotate');  
+        btn.addEventListener('animationend', function() {
+            btn.classList.remove('rotate');  
+        });
+        fetch('/random.json')  
+            .then(response => response.json())
+            .then(data => {
+                const postsContainer = document.getElementById('random-posts');
+                postsContainer.innerHTML = ''; 
+                const shuffled = data.articles.sort(() => 0.5 - Math.random()); 
+                shuffled.slice(0, 5).forEach(post => { 
+                    const postElement = document.createElement('div');
+                    postElement.innerHTML = `
+                    <a href="${post.url}">
+                        <div class="random-post">
+                            <div class="random-post-img">
+                                <img src="${post.image}" alt="${post.title}">
+                            </div>
+                            <div class="random-post-content">
+                                <h3>${post.title}</h3>
+                                <p>${new Date(post.date).toLocaleDateString()}</p>
+                            </div>
+                        </div>
+                    </a>
+                    `;
+                    postsContainer.appendChild(postElement);
+                });
+            });
+    }
+    
+    
+    loadRandomPosts();
+    </script>
+    
+  
+<section class="tagcloud--widget widget--card">
+    <h2>🔖 标签</h2>
+
+    <div class="tagcloud-tags">
+        
+            
+                
+                <a href="/tags/jenkins/" class="tagCloud-tag">
+                    #jenkins<span class="tagcloud-count">1</span>
+                </a>
+            
+                
+                <a href="/tags/kubeasz/" class="tagCloud-tag">
+                    #kubeasz<span class="tagcloud-count">1</span>
+                </a>
+            
+                
+                <a href="/tags/kubernetes/" class="tagCloud-tag">
+                    #kubernetes<span class="tagcloud-count">1</span>
+                </a>
+            
+                
+                <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/" class="tagCloud-tag">
+                    #云原生<span class="tagcloud-count">4</span>
+                </a>
+            
+        
+    </div>
+<section>
+
+
+</div>
+</aside>
+
+                    </div>
+                
+            </main>
+        </div><footer class="site-footer no-copy">
+    <div class="footer-info">
+        <div class="left-footer">
+            <section class="copyright">
+                &copy; 
+                
+                    2023 - 
+                
+                2025 运维匠-运维工程师知识分享经验和最佳实践
+            </section>
+            <section class="static">
+                
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                共创作了14篇文章，60.10k字
+            </section>
+        </div>
+        <div class="right-footer">
+            <section class="time">
+                本站已运行<SPAN id=span_dt_dt></SPAN>
+            </section>
+            <section class="link-info">
+                <span class="RSS">
+                    <a href="https://gohugo.io/" target="_blank">Hugo</a>
+                </span>
+                
+                
+                
+                
+
+            </section>
+        </div>
+    </div>
+</footer>
+
+<SCRIPT language=javascript>
+    function show_date_time(){
+    window.setTimeout("show_date_time()", 1000);
+    BirthDay=new Date("12\/04\/2023 00:00:00");
+    today=new Date();
+    timeold=(today.getTime()-BirthDay.getTime());
+    sectimeold=timeold/1000
+    secondsold=Math.floor(sectimeold);
+    msPerDay=24*60*60*1000
+    e_daysold=timeold/msPerDay
+    daysold=Math.floor(e_daysold);
+    e_hrsold=(e_daysold-daysold)*24;
+    hrsold=Math.floor(e_hrsold);
+    e_minsold=(e_hrsold-hrsold)*60;
+    minsold=Math.floor((e_hrsold-hrsold)*60);
+    seconds=Math.floor((e_minsold-minsold)*60);
+    span_dt_dt.innerHTML=""+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+    }
+    show_date_time();
+</SCRIPT></body>
+    <script>
+    
+    var toggleButton = document.getElementById('toggleButton');
+    var closeButton = document.getElementById('closeButton');
+    var sidebar = document.getElementById('left-sidebar');
+    var overlay = document.querySelector('.overlay');
+
+    
+    toggleButton.addEventListener('click', function() {
+        sidebar.style.left = '0';
+        overlay.style.display = 'block';
+    });
+
+    
+    closeButton.addEventListener('click', function() {
+        sidebar.style.left = '-500px';
+        overlay.style.display = 'none';
+    });
+    </script>
+</html>

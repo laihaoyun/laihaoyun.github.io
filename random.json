@@ -1,0 +1,73 @@
+{
+  "articles": [{
+      "title": "NFS动态提供Kubernetes后端存储卷(NFS Client Provisioner)",
+      "url": "https://www.colorfulgz.com/p/250110/",
+      "image": "https://www.colorfulgz.com/p/250110/index.png",
+      "date": "2025-01-10T00:00:00Z"
+    },{
+      "title": "1分钟配置Kubectl命令自动补全功能",
+      "url": "https://www.colorfulgz.com/p/250109/",
+      "image": "https://www.colorfulgz.com/p/250109/index.png",
+      "date": "2025-01-09T00:00:00Z"
+    },{
+      "title": "kubernetes 部署gitlab",
+      "url": "https://www.colorfulgz.com/p/250108/",
+      "image": "https://www.colorfulgz.com/p/250108/index.png",
+      "date": "2025-01-08T00:00:00Z"
+    },{
+      "title": "Linux 部署安装nvm",
+      "url": "https://www.colorfulgz.com/p/250107/",
+      "image": "https://www.colorfulgz.com/p/250107/index.jpeg",
+      "date": "2025-01-07T00:00:00Z"
+    },{
+      "title": "Kubernetes修改CoreDNS配置文件解析内部域名",
+      "url": "https://www.colorfulgz.com/p/250106/",
+      "image": "https://www.colorfulgz.com/p/250106/index.png",
+      "date": "2025-01-06T00:00:00Z"
+    },{
+      "title": "Kubernetes通过配置 hostAliases 来进行内网域名解析",
+      "url": "https://www.colorfulgz.com/p/250103/",
+      "image": "https://www.colorfulgz.com/p/250103/index.png",
+      "date": "2025-01-03T00:00:00Z"
+    },{
+      "title": "kubernetes 如何避免滚动更新时服务中断",
+      "url": "https://www.colorfulgz.com/p/2024122801/",
+      "image": "https://www.colorfulgz.com/p/2024122801/index.jpg",
+      "date": "2024-12-28T00:00:00Z"
+    },{
+      "title": "Kubernetes详细教程",
+      "url": "https://www.colorfulgz.com/p/2024122601/",
+      "image": "https://www.colorfulgz.com/p/2024122601/cloud.png",
+      "date": "2024-12-23T00:00:00Z"
+    },{
+      "title": "kubernetes部署Jenkins",
+      "url": "https://www.colorfulgz.com/p/240824/",
+      "image": "https://www.colorfulgz.com/p/240824/index.png",
+      "date": "2024-08-24T00:00:00Z"
+    },{
+      "title": "Docker、Containerd使用代理拉取镜像",
+      "url": "https://www.colorfulgz.com/p/2024062901/",
+      "image": "https://www.colorfulgz.com/p/2024062901/index.png",
+      "date": "2024-06-29T00:00:00Z"
+    },{
+      "title": "kubeasz 部署高可用k8s 集群",
+      "url": "https://www.colorfulgz.com/p/24062801/",
+      "image": "https://www.colorfulgz.com/p/24062801/index.png",
+      "date": "2024-06-28T00:00:00Z"
+    },{
+      "title": "通过华为云数据库.qp备份文件恢复自建数据库",
+      "url": "https://www.colorfulgz.com/p/240620/",
+      "image": "https://www.colorfulgz.com/p/240620/index.jpg",
+      "date": "2024-06-20T00:00:00Z"
+    },{
+      "title": "部署和访问 Kubernetes 仪表板（Dashboard）",
+      "url": "https://www.colorfulgz.com/p/231227/",
+      "image": "https://www.colorfulgz.com/p/231227/index.png",
+      "date": "2023-12-17T00:00:00Z"
+    },{
+      "title": "Kubernetes实战",
+      "url": "https://www.colorfulgz.com/p/20231206/",
+      "image": "https://www.colorfulgz.com/p/20231206/20231210210356.png",
+      "date": "2023-12-06T00:00:00Z"
+    }]
+}

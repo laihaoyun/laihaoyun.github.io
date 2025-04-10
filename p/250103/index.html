@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='hostAliases 是一种机制，允许在 Kubernetes Pod 中配置域名与 IP 地址的映射。通过使用 hostAliases，可以将特定的域名解析到指定的 IP 地址上，从而支持内部网络环境中自定义的 DNS 解析需求。这种特性对于需要在内网环境中灵活控制域名解析的应用场景来说非常有用。'>
+<meta name="keywords" content="Kubernetes, hostAliases, 内网, DNS, 域名, 解析"><title>Kubernetes通过配置 hostAliases 来进行内网域名解析</title>
+<link rel='canonical' href='https://www.colorfulgz.com/p/250103/'>
+
+<link rel="stylesheet" href="/scss/style.min.ddca736db85fa62296cbc16390278c3c703c5350931c8a162abbc545d67c6647.css">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+        <meta name="baidu-site-verification" content="codeva-Xk4wHYYoxI" />
+        <meta name="msvalidate.01" content="348985D817128258C5763978D0B59116" /><script defer src="/script.js" data-website-id=""></script><script src="https://registry.npmmirror.com/twikoo/1.6.38/files/dist/twikoo.all.min.js" integrity="sha384-iwCuZOQXH9C9J67oqn6gT5NKj9GRVo/CY8N3mOGk1Vr4aIiAgme2gXTh7QGagg3B" crossorigin="anonymous"></script>
+        
+        <script>
+            var mainColor = '#238E23'; 
+            document.documentElement.style.setProperty('--main-color', mainColor);
+        </script>
+    </head>
+    <body class="
+    article-page
+    "  id="top">
+        <div class="global-bg"></div>
+<div id="loader-wrapper">
+    <div id="loader"></div>
+    <div class="loader-section section-top"></div>
+    <div class="loader-section section-bottom"></div>
+</div>
+<script type="text/javascript">
+    window.onload = function () { document.body.className += ' loaded'; };
+    window.setTimeout(function () { document.body.className += ' loaded'; }, 500);
+</script>
+
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "light");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<nav class="no-copy" id="navbar">
+    <div class="nav-main">
+        <div class="title nav-left">
+            
+            <a href="/">
+                
+                <img src='/favicon.ico' width="60" height="60" alt="alt">
+            </a>
+        </div>
+        <div class="nav-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler" width="24" height="24" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+ <title id="chevronsRightIconTitle">Chevrons Right</title> <polyline points="13 7 18 12 13 17 13 17"/> <polyline points="7 7 12 12 7 17 7 17"/> </svg>
+        </div>
+        <div class="nav-center">
+            <div class="menu--commpect" id="switch">
+                <div class="menu" >
+                    
+                    
+                    
+                    <span >
+                        <a href='/archives/' >
+                            <span>归档</span>
+                        </a>
+                    </span>
+                    
+                </div>
+                <div class="page-name">Kubernetes通过配置 hostAliases 来进行内网域名解析</div>
+            </div>
+        </div>
+        <div class="nav-right">
+            
+            <div class="search">
+                <a href="/search/index.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                </a>
+            </div>
+            <div class="hamburger" type="button" id="toggleButton" aria-label="">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler" width="24" height="24" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<title id="hamburgerIconTitle">Menu</title> 
+<path d="M6 7L18 7M6 12L18 12M6 17L18 17"/> 
+</svg>
+
+            </div>
+            
+                <div class="dark-mode-toggle" id="dark-mode-toggle-2">
+                    <svg t="1712810451251" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7439" width="25" height="25"><path d="M512 0C227.84 0 0 227.84 0 512s227.84 512 512 512 512-227.84 512-512S796.16 0 512 0z m0 977.408V46.592c256 0 465.408 209.408 465.408 465.408S768 977.408 512 977.408z" fill="var(--icon-color-main)"></path></svg>
+                </div>
+            
+        </div>
+    </div>
+</nav>
+
+<script>
+    let lastScrollTop = 0;
+    const navbar = document.getElementById('switch');
+  
+    window.addEventListener('scroll', function() {
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  
+      if (scrollTop > lastScrollTop) {
+        
+        navbar.classList.add('hidden');
+      } else {
+        
+        navbar.classList.remove('hidden');
+      }
+      lastScrollTop = scrollTop;
+    });
+</script><div id="overlay"></div>
+        
+<aside class="left-sidebar" id="left-sidebar">
+    
+    <div class="info-widget no-copy widget--card">
+        <div class="info-bg">
+        </div>
+      
+        <div class="site-avatar">
+          <img src="/images/apple-touch-icon.png" alt="" />
+        </div>
+      
+        <div class="site-meta">
+          <p class="site-name">运维匠</p>
+          <p class="site-description">运维经验技术分享</p>
+        </div>
+        <div class="social">
+          
+        </div>
+      </div>
+      
+    <ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg t="1712835356065" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="9171" width="200" height="200"><path d="M298.666667 550.4h426.666666v-42.666667H298.666667v42.666667z m0-132.266667h426.666666v-42.666666H298.666667v42.666666z m0-136.533333h426.666666v-42.666667H298.666667v42.666667z m576 388.266667v247.466666h-725.333334v-247.466666h93.866667c4.266667 0 8.533333 0 12.8 4.266666L384 768c12.8 8.533333 25.6 12.8 38.4 12.8h183.466667c12.8 0 25.6-4.266667 38.4-12.8l128-93.866667c4.266667-4.266667 8.533333-4.266667 12.8-4.266666h89.6z m0-42.666667h-89.6c-12.8 0-25.6 4.266667-38.4 12.8l-128 93.866667c-4.266667 4.266667-8.533333 4.266667-12.8 4.266666H418.133333c-4.266667 0-8.533333 0-12.8-4.266666l-128-93.866667c-12.8-8.533333-25.6-12.8-38.4-12.8H149.333333V106.666667h725.333334v520.533333z" fill="var(--icon-color-main)" p-id="9172"></path></svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+    </ol>
+    <div class="left-bottom">
+        
+            <div class="dark-mode-toggle" id="dark-mode-toggle-1">
+                <svg t="1712810451251" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7439" width="25" height="25"><path d="M512 0C227.84 0 0 227.84 0 512s227.84 512 512 512 512-227.84 512-512S796.16 0 512 0z m0 977.408V46.592c256 0 465.408 209.408 465.408 465.408S768 977.408 512 977.408z" fill="var(--icon-color-main)"></path></svg>
+            </div>
+        
+        
+    </div>
+</aside>
+
+<div class="overlay" id="closeButton" style=""></div>
+
+        <div class="container main-container flex">
+            <main class="main article-grid">
+                <div class="article-main">
+
+    
+    
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/250103/">
+                <img src="/p/250103/index_hu277670ebf48d1569abc5f98bf44614ba_48446_800x0_resize_box_3.png"
+                        srcset="/p/250103/index_hu277670ebf48d1569abc5f98bf44614ba_48446_800x0_resize_box_3.png 800w, /p/250103/index_hu277670ebf48d1569abc5f98bf44614ba_48446_1600x0_resize_box_3.png 1600w"
+                        width="800" 
+                        height="383" 
+                        loading="lazy"
+                        alt="Featured image of post Kubernetes通过配置 hostAliases 来进行内网域名解析" />
+                
+            </a>
+            
+            
+                <a href="https://www.yuankun.cc/p/20231206/20231210210356_huf82f5319c81c2335d855e5033f51ea01_464670_1600x0_resize_box_3.png" title="封面来源" class="cover-url">
+                    <svg t="1720510544804" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4274" width="200" height="200"><path d="M607.934444 417.856853c-6.179746-6.1777-12.766768-11.746532-19.554358-16.910135l-0.01228 0.011256c-6.986111-6.719028-16.47216-10.857279-26.930349-10.857279-21.464871 0-38.864146 17.400299-38.864146 38.864146 0 9.497305 3.411703 18.196431 9.071609 24.947182l-0.001023 0c0.001023 0.001023 0.00307 0.00307 0.005117 0.004093 2.718925 3.242857 5.953595 6.03853 9.585309 8.251941 3.664459 3.021823 7.261381 5.997598 10.624988 9.361205l3.203972 3.204995c40.279379 40.229237 28.254507 109.539812-12.024871 149.820214L371.157763 796.383956c-40.278355 40.229237-105.761766 40.229237-146.042167 0l-3.229554-3.231601c-40.281425-40.278355-40.281425-105.809861 0-145.991002l75.93546-75.909877c9.742898-7.733125 15.997346-19.668968 15.997346-33.072233 0-23.312962-18.898419-42.211381-42.211381-42.211381-8.797363 0-16.963347 2.693342-23.725354 7.297197-0.021489-0.045025-0.044002-0.088004-0.066515-0.134053l-0.809435 0.757247c-2.989077 2.148943-5.691629 4.669346-8.025791 7.510044l-78.913281 73.841775c-74.178443 74.229608-74.178443 195.632609 0 269.758863l3.203972 3.202948c74.178443 74.127278 195.529255 74.127278 269.707698 0l171.829484-171.880649c74.076112-74.17435 80.357166-191.184297 6.282077-265.311575L607.934444 417.856853z" p-id="4275"></path><path d="M855.61957 165.804257l-3.203972-3.203972c-74.17742-74.178443-195.528232-74.178443-269.706675 0L410.87944 334.479911c-74.178443 74.178443-78.263481 181.296089-4.085038 255.522628l3.152806 3.104711c3.368724 3.367701 6.865361 6.54302 10.434653 9.588379 2.583848 2.885723 5.618974 5.355985 8.992815 7.309476 0.025583 0.020466 0.052189 0.041956 0.077771 0.062422l0.011256-0.010233c5.377474 3.092431 11.608386 4.870938 18.257829 4.870938 20.263509 0 36.68962-16.428158 36.68962-36.68962 0-5.719258-1.309832-11.132548-3.645017-15.95846l0 0c-4.850471-10.891048-13.930267-17.521049-20.210297-23.802102l-3.15383-3.102664c-40.278355-40.278355-24.982998-98.79612 15.295358-139.074476l171.930791-171.830507c40.179095-40.280402 105.685018-40.280402 145.965419 0l3.206018 3.152806c40.279379 40.281425 40.279379 105.838513 0 146.06775l-75.686796 75.737962c-10.296507 7.628748-16.97358 19.865443-16.97358 33.662681 0 23.12365 18.745946 41.87062 41.87062 41.87062 8.048303 0 15.563464-2.275833 21.944801-6.211469 0.048095 0.081864 0.093121 0.157589 0.141216 0.240477l1.173732-1.083681c3.616364-2.421142 6.828522-5.393847 9.529027-8.792247l79.766718-73.603345C929.798013 361.334535 929.798013 239.981676 855.61957 165.804257z" p-id="4276"></path></svg>
+                </a>
+            
+            
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/kubernetes/" >
+                Kubernetes
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/250103/">Kubernetes通过配置 hostAliases 来进行内网域名解析</a>
+        </h2>
+        
+        <h3 class="article-subtitle">
+            hostAliases 是一种机制，允许在 Kubernetes Pod 中配置域名与 IP 地址的映射。通过使用 hostAliases，可以将特定的域名解析到指定的 IP 地址上，从而支持内部网络环境中自定义的 DNS 解析需求。这种特性对于需要在内网环境中灵活控制域名解析的应用场景来说非常有用。
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jan 03, 2025</time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    
+    
+    <p>kubernetes hostAliases 的示例:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Pod</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">hostAliases</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">containers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">hostAliases</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">nginx:latest</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">hostAliases</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">ip</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;10.10.1.100&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">hostnames</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="s2">&#34;docker.local.io&#34;</span><span class="w"> </span><span class="c"># 内网域名</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">ip</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;10.10.1.101&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">hostnames</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="s2">&#34;gitlab.local.io&#34;</span><span class="w"> </span><span class="c"># 内网域名</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">ip</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;10.10.1.102&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">hostnames</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="s2">&#34;jenkins.local.io&#34;</span><span class="w"> </span><span class="c"># 内网域名</span><span class="w">
+</span></span></span></code></pre></div>
+</section>
+
+
+    <footer class="article-footer">
+    
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title"></h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image no-copy">
+    <a href="/p/250106/">
+        
+        
+            <div class="article-image">
+                <img src="/p/250106/index.6d23038c55374ba08d6ff8e1d42f7bb8_hu6f81351f3fdcc670c9eb8871fc301ff4_225799_700x420_fill_box_smart1_3.png" 
+                        width="700" 
+                        height="420" 
+                        loading="lazy"
+                        alt="Featured image of post Kubernetes修改CoreDNS配置文件解析内部域名"
+                        data-key="250106" 
+                        data-hash="md5-bSMDjFU3S6CNb/jh1C97uA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Kubernetes修改CoreDNS配置文件解析内部域名</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image no-copy">
+    <a href="/p/24062801/">
+        
+        
+            <div class="article-image">
+                <img src="/p/24062801/index.cfa80cfaa88064d1582988f871596788_hu84ea1062d50aaadcc8573c3c51d20f27_1044746_700x420_fill_box_smart1_3.png" 
+                        width="700" 
+                        height="420" 
+                        loading="lazy"
+                        alt="Featured image of post kubeasz 部署高可用k8s 集群"
+                        data-key="24062801" 
+                        data-hash="md5-z6gM&#43;qiAZNFYKYj4cVlniA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">kubeasz 部署高可用k8s 集群</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        <script>
+  twikoo.init({
+    envId: "",
+    el: "#tcomment",
+  });
+</script>
+    
+    <div id="skip">
+        <div class="skip-top">
+          <a href="#top" class="skip-top" title="返回顶部">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<title id="chevronUpIconTitle">返回顶部</title> 
+<polyline points="6 14 12 8 18 14 18 14"/> 
+</svg>
+          </a>
+        </div>
+        
+    </div>
+    <script>
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        const scrollToggleBtn = document.querySelector('#skip');
+
+        const handleScrollDebounced = debounce(function() {
+            scrollToggleBtn.classList.remove('hidden');
+        }, 1000);
+
+        window.addEventListener('scroll', () => {
+            scrollToggleBtn.classList.add('hidden');
+            handleScrollDebounced();
+        });
+    </script>
+
+                    <script type="text/javascript" src="/ts/main.js" defer></script>
+
+  <script src="/js/lightbox-plus-jquery.js"></script>
+
+  <script src="/js/pieces.js"></script>
+
+  <script src="/js/twikoo.js"></script>
+
+
+
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+                </div>
+                
+                    <div class="article-sidebar">
+                        <aside class="right-sidebar">
+    <form action="/search/" class="search-form" >
+        <p>
+            <input name="keyword" required placeholder="" />
+        
+            <button title="">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+            </button>
+        </p>
+    </form>
+    <div class="info-widget no-copy widget--card">
+    <div class="info-bg">
+    </div>
+  
+    <div class="site-avatar">
+      <img src="/images/apple-touch-icon.png" alt="" />
+    </div>
+  
+    <div class="site-meta">
+      <p class="site-name">运维匠</p>
+      <p class="site-description">运维经验技术分享</p>
+    </div>
+    <div class="social">
+      
+      
+    </div>
+  </div>
+    
+
+    <div class="sticky">
+  
+  <div class="random-posts widget--card">
+    <h2>📄 随机文章</h2>
+    <button id="random-btn" onclick="loadRandomPosts()" class="">
+        <svg role="img" xmlns="http://www.w3.org/2000/svg" width="48px" height="48px" viewBox="0 0 24 24" aria-labelledby="refreshIconTitle" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" fill="none">
+<polyline points="22 12 19 15 16 12"/> 
+<path d="M11,20 C6.581722,20 3,16.418278 3,12 C3,7.581722 6.581722,4 11,4 C15.418278,4 19,7.581722 19,12 L19,14"/> 
+</svg>
+    </button>
+    <div id="random-posts"></div>
+</div>
+
+<script>
+    function loadRandomPosts() {
+        const btn = document.getElementById('random-btn');
+        btn.classList.add('rotate');  
+        btn.addEventListener('animationend', function() {
+            btn.classList.remove('rotate');  
+        });
+        fetch('/random.json')  
+            .then(response => response.json())
+            .then(data => {
+                const postsContainer = document.getElementById('random-posts');
+                postsContainer.innerHTML = ''; 
+                const shuffled = data.articles.sort(() => 0.5 - Math.random()); 
+                shuffled.slice(0, 5).forEach(post => { 
+                    const postElement = document.createElement('div');
+                    postElement.innerHTML = `
+                    <a href="${post.url}">
+                        <div class="random-post">
+                            <div class="random-post-img">
+                                <img src="${post.image}" alt="${post.title}">
+                            </div>
+                            <div class="random-post-content">
+                                <h3>${post.title}</h3>
+                                <p>${new Date(post.date).toLocaleDateString()}</p>
+                            </div>
+                        </div>
+                    </a>
+                    `;
+                    postsContainer.appendChild(postElement);
+                });
+            });
+    }
+    
+    
+    loadRandomPosts();
+    </script>
+    
+  
+<section class="tagcloud--widget widget--card">
+    <h2>🔖 标签</h2>
+
+    <div class="tagcloud-tags">
+        
+            
+                
+                <a href="/tags/jenkins/" class="tagCloud-tag">
+                    #jenkins<span class="tagcloud-count">1</span>
+                </a>
+            
+                
+                <a href="/tags/kubeasz/" class="tagCloud-tag">
+                    #kubeasz<span class="tagcloud-count">1</span>
+                </a>
+            
+                
+                <a href="/tags/kubernetes/" class="tagCloud-tag">
+                    #kubernetes<span class="tagcloud-count">1</span>
+                </a>
+            
+                
+                <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/" class="tagCloud-tag">
+                    #云原生<span class="tagcloud-count">4</span>
+                </a>
+            
+        
+    </div>
+<section>
+
+
+</div>
+</aside>
+
+                    </div>
+                
+            </main>
+        </div><footer class="site-footer no-copy">
+    <div class="footer-info">
+        <div class="left-footer">
+            <section class="copyright">
+                &copy; 
+                
+                    2023 - 
+                
+                2025 运维匠-运维工程师知识分享经验和最佳实践
+            </section>
+            <section class="static">
+                
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                共创作了14篇文章，60.10k字
+            </section>
+        </div>
+        <div class="right-footer">
+            <section class="time">
+                本站已运行<SPAN id=span_dt_dt></SPAN>
+            </section>
+            <section class="link-info">
+                <span class="RSS">
+                    <a href="https://gohugo.io/" target="_blank">Hugo</a>
+                </span>
+                
+                
+                
+                
+
+            </section>
+        </div>
+    </div>
+</footer>
+
+<SCRIPT language=javascript>
+    function show_date_time(){
+    window.setTimeout("show_date_time()", 1000);
+    BirthDay=new Date("12\/04\/2023 00:00:00");
+    today=new Date();
+    timeold=(today.getTime()-BirthDay.getTime());
+    sectimeold=timeold/1000
+    secondsold=Math.floor(sectimeold);
+    msPerDay=24*60*60*1000
+    e_daysold=timeold/msPerDay
+    daysold=Math.floor(e_daysold);
+    e_hrsold=(e_daysold-daysold)*24;
+    hrsold=Math.floor(e_hrsold);
+    e_minsold=(e_hrsold-hrsold)*60;
+    minsold=Math.floor((e_hrsold-hrsold)*60);
+    seconds=Math.floor((e_minsold-minsold)*60);
+    span_dt_dt.innerHTML=""+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+    }
+    show_date_time();
+</SCRIPT></body>
+    <script>
+    
+    var toggleButton = document.getElementById('toggleButton');
+    var closeButton = document.getElementById('closeButton');
+    var sidebar = document.getElementById('left-sidebar');
+    var overlay = document.querySelector('.overlay');
+
+    
+    toggleButton.addEventListener('click', function() {
+        sidebar.style.left = '0';
+        overlay.style.display = 'block';
+    });
+
+    
+    closeButton.addEventListener('click', function() {
+        sidebar.style.left = '-500px';
+        overlay.style.display = 'none';
+    });
+    </script>
+</html>

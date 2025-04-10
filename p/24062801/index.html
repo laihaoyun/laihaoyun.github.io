@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='kubeasz 致力于提供快速部署高可用k8s集群的工具。'>
+<meta name="keywords" content="kubernetes, kubeasz, 高可用, 集群, 自动化部署, "><title>kubeasz 部署高可用k8s 集群</title>
+<link rel='canonical' href='https://www.colorfulgz.com/p/24062801/'>
+
+<link rel="stylesheet" href="/scss/style.min.ddca736db85fa62296cbc16390278c3c703c5350931c8a162abbc545d67c6647.css">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+        <meta name="baidu-site-verification" content="codeva-Xk4wHYYoxI" />
+        <meta name="msvalidate.01" content="348985D817128258C5763978D0B59116" /><script defer src="/script.js" data-website-id=""></script><script src="https://registry.npmmirror.com/twikoo/1.6.38/files/dist/twikoo.all.min.js" integrity="sha384-iwCuZOQXH9C9J67oqn6gT5NKj9GRVo/CY8N3mOGk1Vr4aIiAgme2gXTh7QGagg3B" crossorigin="anonymous"></script>
+        
+        <script>
+            var mainColor = '#FFA500'; 
+            document.documentElement.style.setProperty('--main-color', mainColor);
+        </script>
+    </head>
+    <body class="
+    article-page
+    "  id="top">
+        <div class="global-bg"></div>
+<div id="loader-wrapper">
+    <div id="loader"></div>
+    <div class="loader-section section-top"></div>
+    <div class="loader-section section-bottom"></div>
+</div>
+<script type="text/javascript">
+    window.onload = function () { document.body.className += ' loaded'; };
+    window.setTimeout(function () { document.body.className += ' loaded'; }, 500);
+</script>
+
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "light");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<nav class="no-copy" id="navbar">
+    <div class="nav-main">
+        <div class="title nav-left">
+            
+            <a href="/">
+                
+                <img src='/favicon.ico' width="60" height="60" alt="alt">
+            </a>
+        </div>
+        <div class="nav-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler" width="24" height="24" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+ <title id="chevronsRightIconTitle">Chevrons Right</title> <polyline points="13 7 18 12 13 17 13 17"/> <polyline points="7 7 12 12 7 17 7 17"/> </svg>
+        </div>
+        <div class="nav-center">
+            <div class="menu--commpect" id="switch">
+                <div class="menu" >
+                    
+                    
+                    
+                    <span >
+                        <a href='/archives/' >
+                            <span>归档</span>
+                        </a>
+                    </span>
+                    
+                </div>
+                <div class="page-name">kubeasz 部署高可用k8s 集群</div>
+            </div>
+        </div>
+        <div class="nav-right">
+            
+            <div class="search">
+                <a href="/search/index.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                </a>
+            </div>
+            <div class="hamburger" type="button" id="toggleButton" aria-label="">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler" width="24" height="24" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<title id="hamburgerIconTitle">Menu</title> 
+<path d="M6 7L18 7M6 12L18 12M6 17L18 17"/> 
+</svg>
+
+            </div>
+            
+                <div class="dark-mode-toggle" id="dark-mode-toggle-2">
+                    <svg t="1712810451251" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7439" width="25" height="25"><path d="M512 0C227.84 0 0 227.84 0 512s227.84 512 512 512 512-227.84 512-512S796.16 0 512 0z m0 977.408V46.592c256 0 465.408 209.408 465.408 465.408S768 977.408 512 977.408z" fill="var(--icon-color-main)"></path></svg>
+                </div>
+            
+        </div>
+    </div>
+</nav>
+
+<script>
+    let lastScrollTop = 0;
+    const navbar = document.getElementById('switch');
+  
+    window.addEventListener('scroll', function() {
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  
+      if (scrollTop > lastScrollTop) {
+        
+        navbar.classList.add('hidden');
+      } else {
+        
+        navbar.classList.remove('hidden');
+      }
+      lastScrollTop = scrollTop;
+    });
+</script><div id="overlay"></div>
+        
+<aside class="left-sidebar" id="left-sidebar">
+    
+    <div class="info-widget no-copy widget--card">
+        <div class="info-bg">
+        </div>
+      
+        <div class="site-avatar">
+          <img src="/images/apple-touch-icon.png" alt="" />
+        </div>
+      
+        <div class="site-meta">
+          <p class="site-name">运维匠</p>
+          <p class="site-description">运维经验技术分享</p>
+        </div>
+        <div class="social">
+          
+        </div>
+      </div>
+      
+    <ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg t="1712835356065" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="9171" width="200" height="200"><path d="M298.666667 550.4h426.666666v-42.666667H298.666667v42.666667z m0-132.266667h426.666666v-42.666666H298.666667v42.666666z m0-136.533333h426.666666v-42.666667H298.666667v42.666667z m576 388.266667v247.466666h-725.333334v-247.466666h93.866667c4.266667 0 8.533333 0 12.8 4.266666L384 768c12.8 8.533333 25.6 12.8 38.4 12.8h183.466667c12.8 0 25.6-4.266667 38.4-12.8l128-93.866667c4.266667-4.266667 8.533333-4.266667 12.8-4.266666h89.6z m0-42.666667h-89.6c-12.8 0-25.6 4.266667-38.4 12.8l-128 93.866667c-4.266667 4.266667-8.533333 4.266667-12.8 4.266666H418.133333c-4.266667 0-8.533333 0-12.8-4.266666l-128-93.866667c-12.8-8.533333-25.6-12.8-38.4-12.8H149.333333V106.666667h725.333334v520.533333z" fill="var(--icon-color-main)" p-id="9172"></path></svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+    </ol>
+    <div class="left-bottom">
+        
+            <div class="dark-mode-toggle" id="dark-mode-toggle-1">
+                <svg t="1712810451251" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7439" width="25" height="25"><path d="M512 0C227.84 0 0 227.84 0 512s227.84 512 512 512 512-227.84 512-512S796.16 0 512 0z m0 977.408V46.592c256 0 465.408 209.408 465.408 465.408S768 977.408 512 977.408z" fill="var(--icon-color-main)"></path></svg>
+            </div>
+        
+        
+    </div>
+</aside>
+
+<div class="overlay" id="closeButton" style=""></div>
+
+        <div class="container main-container flex">
+            <main class="main article-grid">
+                <div class="article-main">
+
+    
+    
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/24062801/">
+                <img src="/p/24062801/index_hu84ea1062d50aaadcc8573c3c51d20f27_1044746_800x0_resize_box_3.png"
+                        srcset="/p/24062801/index_hu84ea1062d50aaadcc8573c3c51d20f27_1044746_800x0_resize_box_3.png 800w, /p/24062801/index_hu84ea1062d50aaadcc8573c3c51d20f27_1044746_1600x0_resize_box_3.png 1600w"
+                        width="800" 
+                        height="450" 
+                        loading="lazy"
+                        alt="Featured image of post kubeasz 部署高可用k8s 集群" />
+                
+            </a>
+            
+            
+                <a href="https://www.yuankun.cc/p/20231206/20231210210356_huf82f5319c81c2335d855e5033f51ea01_464670_1600x0_resize_box_3.png" title="封面来源" class="cover-url">
+                    <svg t="1720510544804" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4274" width="200" height="200"><path d="M607.934444 417.856853c-6.179746-6.1777-12.766768-11.746532-19.554358-16.910135l-0.01228 0.011256c-6.986111-6.719028-16.47216-10.857279-26.930349-10.857279-21.464871 0-38.864146 17.400299-38.864146 38.864146 0 9.497305 3.411703 18.196431 9.071609 24.947182l-0.001023 0c0.001023 0.001023 0.00307 0.00307 0.005117 0.004093 2.718925 3.242857 5.953595 6.03853 9.585309 8.251941 3.664459 3.021823 7.261381 5.997598 10.624988 9.361205l3.203972 3.204995c40.279379 40.229237 28.254507 109.539812-12.024871 149.820214L371.157763 796.383956c-40.278355 40.229237-105.761766 40.229237-146.042167 0l-3.229554-3.231601c-40.281425-40.278355-40.281425-105.809861 0-145.991002l75.93546-75.909877c9.742898-7.733125 15.997346-19.668968 15.997346-33.072233 0-23.312962-18.898419-42.211381-42.211381-42.211381-8.797363 0-16.963347 2.693342-23.725354 7.297197-0.021489-0.045025-0.044002-0.088004-0.066515-0.134053l-0.809435 0.757247c-2.989077 2.148943-5.691629 4.669346-8.025791 7.510044l-78.913281 73.841775c-74.178443 74.229608-74.178443 195.632609 0 269.758863l3.203972 3.202948c74.178443 74.127278 195.529255 74.127278 269.707698 0l171.829484-171.880649c74.076112-74.17435 80.357166-191.184297 6.282077-265.311575L607.934444 417.856853z" p-id="4275"></path><path d="M855.61957 165.804257l-3.203972-3.203972c-74.17742-74.178443-195.528232-74.178443-269.706675 0L410.87944 334.479911c-74.178443 74.178443-78.263481 181.296089-4.085038 255.522628l3.152806 3.104711c3.368724 3.367701 6.865361 6.54302 10.434653 9.588379 2.583848 2.885723 5.618974 5.355985 8.992815 7.309476 0.025583 0.020466 0.052189 0.041956 0.077771 0.062422l0.011256-0.010233c5.377474 3.092431 11.608386 4.870938 18.257829 4.870938 20.263509 0 36.68962-16.428158 36.68962-36.68962 0-5.719258-1.309832-11.132548-3.645017-15.95846l0 0c-4.850471-10.891048-13.930267-17.521049-20.210297-23.802102l-3.15383-3.102664c-40.278355-40.278355-24.982998-98.79612 15.295358-139.074476l171.930791-171.830507c40.179095-40.280402 105.685018-40.280402 145.965419 0l3.206018 3.152806c40.279379 40.281425 40.279379 105.838513 0 146.06775l-75.686796 75.737962c-10.296507 7.628748-16.97358 19.865443-16.97358 33.662681 0 23.12365 18.745946 41.87062 41.87062 41.87062 8.048303 0 15.563464-2.275833 21.944801-6.211469 0.048095 0.081864 0.093121 0.157589 0.141216 0.240477l1.173732-1.083681c3.616364-2.421142 6.828522-5.393847 9.529027-8.792247l79.766718-73.603345C929.798013 361.334535 929.798013 239.981676 855.61957 165.804257z" p-id="4276"></path></svg>
+                </a>
+            
+            
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/kubernetes/" >
+                Kubernetes
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/24062801/">kubeasz 部署高可用k8s 集群</a>
+        </h2>
+        
+        <h3 class="article-subtitle">
+            kubeasz 致力于提供快速部署高可用k8s集群的工具。
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jun 28, 2024</time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    
+    
+    <h2 id="部署结构">部署结构</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">IP</th>
+<th style="text-align:center">主机名</th>
+<th style="text-align:center">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">master01</td>
+<td style="text-align:center">192.168.3.100</td>
+<td style="text-align:center">master1</td>
+<td style="text-align:center">master1 etcd1</td>
+</tr>
+<tr>
+<td style="text-align:center">master02</td>
+<td style="text-align:center">192.168.3.101</td>
+<td style="text-align:center">master2</td>
+<td style="text-align:center">master2 etcd2</td>
+</tr>
+<tr>
+<td style="text-align:center">master03</td>
+<td style="text-align:center">192.168.3.104</td>
+<td style="text-align:center">master3</td>
+<td style="text-align:center">master3 etcd3</td>
+</tr>
+<tr>
+<td style="text-align:center">node01</td>
+<td style="text-align:center">192.168.3.102</td>
+<td style="text-align:center">node01</td>
+<td style="text-align:center">工作节点</td>
+</tr>
+<tr>
+<td style="text-align:center">node02</td>
+<td style="text-align:center">192.168.3.103</td>
+<td style="text-align:center">node02</td>
+<td style="text-align:center">工作节点</td>
+</tr>
+<tr>
+<td style="text-align:center">kubeasz</td>
+<td style="text-align:center">192.168.3.26</td>
+<td style="text-align:center">kubeasz</td>
+<td style="text-align:center">部署机器</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="软件清单">软件清单</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">操作系统: Ubuntu server 20.04
+</span></span><span class="line"><span class="cl">k8s版本 1.30.1
+</span></span><span class="line"><span class="cl">calico 3.26.4
+</span></span><span class="line"><span class="cl">etcd 3.5.12
+</span></span><span class="line"><span class="cl">kubeasz 3.6.4
+</span></span></code></pre></div><h2 id="kubeasz-部署高可用-kubernetes">kubeasz 部署高可用 kubernetes</h2>
+<ul>
+<li>部署节点基本配置</li>
+</ul>
+<p>此处部署节点是：192.168.3.26，部署节点的功能如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">1从互联⽹下载安装资源
+</span></span><span class="line"><span class="cl">2可选将部分镜像修改tag后上传到公司内部镜像仓库服务器
+</span></span><span class="line"><span class="cl">3对master进⾏初始化
+</span></span><span class="line"><span class="cl">4对node进⾏初始化
+</span></span><span class="line"><span class="cl">5后期集群维护，包括：添加及删除master节点;添加就删除node节点;etcd数据备份及恢复
+</span></span></code></pre></div><p>安装 ansible 并进行 ssh 免密登录：</p>
+<p>apt 安装 ansieble，并将部署节点的公钥拷贝至 master、node、etcd 节点<br>
+注： 在部署节点执行</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">root@kuspary:~# apt update <span class="o">&amp;&amp;</span>　apt install ansible -y
+</span></span><span class="line"><span class="cl"><span class="c1"># 生成密钥对，一路回车即可</span>
+</span></span><span class="line"><span class="cl">root@kuspary:~# ssh-keygen
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">root@kuspary:~# apt install sshpass -y <span class="c1"># 如果已经安装不需要执行</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="cp">#!/bin/bash
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="c1">#目标主机列表</span>
+</span></span><span class="line"><span class="cl"><span class="nv">IP</span><span class="o">=</span><span class="s2">&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">192.168.3.100
+</span></span></span><span class="line"><span class="cl"><span class="s2">192.168.3.101
+</span></span></span><span class="line"><span class="cl"><span class="s2">192.168.3.102
+</span></span></span><span class="line"><span class="cl"><span class="s2">192.168.3.103
+</span></span></span><span class="line"><span class="cl"><span class="s2">192.168.3.104
+</span></span></span><span class="line"><span class="cl"><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">REMOTE_PORT</span><span class="o">=</span><span class="s2">&#34;22&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">REMOTE_USER</span><span class="o">=</span><span class="s2">&#34;root&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">REMOTE_PASS</span><span class="o">=</span><span class="s2">&#34;root&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> REMOTE_HOST in <span class="si">${</span><span class="nv">IP</span><span class="si">}</span><span class="p">;</span><span class="k">do</span>
+</span></span><span class="line"><span class="cl">  <span class="nv">REMOTE_CMD</span><span class="o">=</span><span class="s2">&#34;echo </span><span class="si">${</span><span class="nv">REMOTE_HOST</span><span class="si">}</span><span class="s2"> is successfully!&#34;</span>
+</span></span><span class="line"><span class="cl">  ssh-keyscan -p <span class="s2">&#34;</span><span class="si">${</span><span class="nv">REMOTE_PORT</span><span class="si">}</span><span class="s2">&#34;</span> <span class="s2">&#34;</span><span class="si">${</span><span class="nv">REMOTE_HOST</span><span class="si">}</span><span class="s2">&#34;</span> &gt;&gt; ~/.ssh/known_hosts   <span class="c1">#在本地添加远程主机的公钥信息，避免交互式应答</span>
+</span></span><span class="line"><span class="cl">  sshpass -p <span class="s2">&#34;</span><span class="si">${</span><span class="nv">REMOTE_PASS</span><span class="si">}</span><span class="s2">&#34;</span> ssh-copy-id <span class="s2">&#34;</span><span class="si">${</span><span class="nv">REMOTE_USER</span><span class="si">}</span><span class="s2">@</span><span class="si">${</span><span class="nv">REMOTE_HOST</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">[</span> <span class="nv">$?</span> -eq <span class="m">0</span> <span class="o">]</span><span class="p">;</span><span class="k">then</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="si">${</span><span class="nv">REMOTE_HOST</span><span class="si">}</span> 免秘钥配置完成!
+</span></span><span class="line"><span class="cl">    ssh <span class="si">${</span><span class="nv">REMOTE_HOST</span><span class="si">}</span> ln -sv /usr/bin/python3 /usr/bin/python
+</span></span><span class="line"><span class="cl">  <span class="k">else</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="s2">&#34;免密钥配置失败!&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">fi</span>
+</span></span><span class="line"><span class="cl"><span class="k">done</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 验证免密登录</span>
+</span></span><span class="line"><span class="cl">ssh 192.168.3.100
+</span></span></code></pre></div><ul>
+<li>下载 kubeasz 项⽬及组件</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">root@kubeasz:/data/kubeasz# wget https://github.com/easzlab/kubeasz/releases/download/3.6.4/ezdown
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">root@kubeasz:/data/kubeasz# chmod +x ezdown
+</span></span><span class="line"><span class="cl"><span class="c1">#下载kubeasz代码、二进制、默认容器镜像,会运行一个redistry镜像仓库，将下载的镜像push到仓库</span>
+</span></span><span class="line"><span class="cl">root@kubeasz:/data/kubeasz# ./ezdown -D
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">root@kubeasz:/data/kubeasz# ll /etc/kubeasz/  <span class="c1">#kubeasz所有文件和配置路径</span>
+</span></span><span class="line"><span class="cl">total <span class="m">140</span>
+</span></span><span class="line"><span class="cl">drwxrwxr-x  <span class="m">12</span> root root  <span class="m">4096</span> Jun <span class="m">28</span> 07:35 ./
+</span></span><span class="line"><span class="cl">drwxr-xr-x <span class="m">108</span> root root  <span class="m">4096</span> Jun <span class="m">28</span> 07:40 ../
+</span></span><span class="line"><span class="cl">-rw-rw-r--   <span class="m">1</span> root root <span class="m">20304</span> May <span class="m">22</span> 15:09 ansible.cfg
+</span></span><span class="line"><span class="cl">drwxr-xr-x   <span class="m">5</span> root root  <span class="m">4096</span> Jun <span class="m">28</span> 07:35 bin/
+</span></span><span class="line"><span class="cl">drwxrwxr-x   <span class="m">8</span> root root  <span class="m">4096</span> Jun <span class="m">23</span> 15:08 docs/
+</span></span><span class="line"><span class="cl">drwxr-xr-x   <span class="m">3</span> root root  <span class="m">4096</span> Jun <span class="m">28</span> 07:45 down/
+</span></span><span class="line"><span class="cl">drwxrwxr-x   <span class="m">2</span> root root  <span class="m">4096</span> Jun <span class="m">23</span> 15:08 example/
+</span></span><span class="line"><span class="cl">-rwxrwxr-x   <span class="m">1</span> root root <span class="m">26507</span> May <span class="m">22</span> 15:09 ezctl*
+</span></span><span class="line"><span class="cl">-rwxrwxr-x   <span class="m">1</span> root root <span class="m">32390</span> May <span class="m">22</span> 15:09 ezdown*
+</span></span><span class="line"><span class="cl">drwxrwxr-x   <span class="m">4</span> root root  <span class="m">4096</span> Jun <span class="m">23</span> 15:08 .github/
+</span></span><span class="line"><span class="cl">-rw-rw-r--   <span class="m">1</span> root root   <span class="m">301</span> May <span class="m">22</span> 15:09 .gitignore
+</span></span><span class="line"><span class="cl">drwxrwxr-x  <span class="m">10</span> root root  <span class="m">4096</span> Jun <span class="m">23</span> 15:08 manifests/
+</span></span><span class="line"><span class="cl">drwxrwxr-x   <span class="m">2</span> root root  <span class="m">4096</span> Jun <span class="m">23</span> 15:08 pics/
+</span></span><span class="line"><span class="cl">drwxrwxr-x   <span class="m">2</span> root root  <span class="m">4096</span> Jun <span class="m">23</span> 15:08 playbooks/
+</span></span><span class="line"><span class="cl">-rw-rw-r--   <span class="m">1</span> root root  <span class="m">6349</span> May <span class="m">22</span> 15:09 README.md
+</span></span><span class="line"><span class="cl">drwxrwxr-x  <span class="m">22</span> root root  <span class="m">4096</span> Jun <span class="m">23</span> 15:08 roles/
+</span></span><span class="line"><span class="cl">drwxrwxr-x   <span class="m">2</span> root root  <span class="m">4096</span> Jun <span class="m">23</span> 15:08 tools/
+</span></span></code></pre></div><ul>
+<li>部署集群</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">root@kubeasz:/data/kubeasz# <span class="nb">cd</span> /etc/kubeasz/
+</span></span><span class="line"><span class="cl">root@kubeasz:/etc/kubeasz# ./ezctl new k8s-cluster01    <span class="c1"># 新建管理集群</span>
+</span></span><span class="line"><span class="cl">2024-06-28 07:58:21 DEBUG generate custom cluster files in /etc/kubeasz/clusters/k8s-cluster01 <span class="c1">#集群使用相关配置路径</span>
+</span></span><span class="line"><span class="cl">2024-06-28 07:58:21 DEBUG <span class="nb">set</span> versions
+</span></span><span class="line"><span class="cl">2024-06-28 07:58:21 DEBUG cluster k8s-cluster01: files successfully created.
+</span></span><span class="line"><span class="cl">2024-06-28 07:58:21 INFO next steps 1: to config <span class="s1">&#39;/etc/kubeasz/clusters/k8s-cluster01/hosts&#39;</span>  <span class="c1">#ansible hosts文件</span>
+</span></span><span class="line"><span class="cl">2024-06-28 07:58:21 INFO next steps 2: to config <span class="s1">&#39;/etc/kubeasz/clusters/k8s-cluster01/config.yml&#39;</span> <span class="c1">#ansible yaml文件</span>
+</span></span></code></pre></div><p>配置用于集群管理的 ansible hosts 文件</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">root@kubeasz:/etc/kubeasz/clusters/k8s-cluster01# <span class="nb">pwd</span>
+</span></span><span class="line"><span class="cl">/etc/kubeasz/clusters/k8s-cluster01
+</span></span><span class="line"><span class="cl">root@kubeasz:/etc/kubeasz/clusters/k8s-cluster01# ll <span class="c1">#注意，这两个文件至关重要，任何小错误都会导致集群有问题</span>
+</span></span><span class="line"><span class="cl">total <span class="m">20</span>
+</span></span><span class="line"><span class="cl">drwxr-xr-x <span class="m">2</span> root root <span class="m">4096</span> Jun <span class="m">28</span> 07:58 ./
+</span></span><span class="line"><span class="cl">drwxr-xr-x <span class="m">3</span> root root <span class="m">4096</span> Jun <span class="m">28</span> 07:58 ../
+</span></span><span class="line"><span class="cl">-rw-r--r-- <span class="m">1</span> root root <span class="m">7615</span> Jun <span class="m">28</span> 07:58 config.yml
+</span></span><span class="line"><span class="cl">-rw-r--r-- <span class="m">1</span> root root <span class="m">2381</span> Jun <span class="m">28</span> 07:58 hosts
+</span></span><span class="line"><span class="cl">root@kubeasz:/etc/kubeasz/clusters/k8s-cluster01#
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># 修改hosts文件</span>
+</span></span><span class="line"><span class="cl">vim /etc/kubeasz/clusters/k8s-cluster01/hosts
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># &#39;etcd&#39; cluster should have odd member(s) (1,3,5,...)</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>etcd<span class="o">]</span>
+</span></span><span class="line"><span class="cl">192.168.3.100
+</span></span><span class="line"><span class="cl">192.168.3.101
+</span></span><span class="line"><span class="cl">192.168.3.104
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># master node(s), set unique &#39;k8s_nodename&#39; for each node</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># CAUTION: &#39;k8s_nodename&#39; must consist of lower case alphanumeric characters, &#39;-&#39; or &#39;.&#39;,</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># and must start and end with an alphanumeric character</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>kube_master<span class="o">]</span>
+</span></span><span class="line"><span class="cl">192.168.3.100 <span class="nv">k8s_nodename</span><span class="o">=</span><span class="s1">&#39;master01&#39;</span>
+</span></span><span class="line"><span class="cl">192.168.3.101 <span class="nv">k8s_nodename</span><span class="o">=</span><span class="s1">&#39;master02&#39;</span>
+</span></span><span class="line"><span class="cl">192.168.3.104 <span class="nv">k8s_nodename</span><span class="o">=</span><span class="s1">&#39;master03&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># work node(s), set unique &#39;k8s_nodename&#39; for each node</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># CAUTION: &#39;k8s_nodename&#39; must consist of lower case alphanumeric characters, &#39;-&#39; or &#39;.&#39;,</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># and must start and end with an alphanumeric character</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>kube_node<span class="o">]</span>
+</span></span><span class="line"><span class="cl">192.168.3.102 <span class="nv">k8s_nodename</span><span class="o">=</span><span class="s1">&#39;node01&#39;</span>
+</span></span><span class="line"><span class="cl">192.168.3.103 <span class="nv">k8s_nodename</span><span class="o">=</span><span class="s1">&#39;node02&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># [optional] harbor server, a private docker registry</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># &#39;NEW_INSTALL&#39;: &#39;true&#39; to install a harbor server; &#39;false&#39; to integrate with existed one</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>harbor<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#192.168.1.8 NEW_INSTALL=false</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># [optional] loadbalance for accessing k8s from outside</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>ex_lb<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#192.168.1.6 LB_ROLE=backup EX_APISERVER_VIP=192.168.1.250 EX_APISERVER_PORT=8443</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#192.168.1.7 LB_ROLE=master EX_APISERVER_VIP=192.168.1.250 EX_APISERVER_PORT=8443</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># [optional] ntp server for the cluster</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>chrony<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#192.168.1.1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">[</span>all:vars<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># --------- Main Variables ---------------</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Secure port for apiservers</span>
+</span></span><span class="line"><span class="cl"><span class="nv">SECURE_PORT</span><span class="o">=</span><span class="s2">&#34;6443&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Cluster container-runtime supported: docker, containerd</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># if k8s version &gt;= 1.24, docker is not supported</span>
+</span></span><span class="line"><span class="cl"><span class="nv">CONTAINER_RUNTIME</span><span class="o">=</span><span class="s2">&#34;containerd&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Network plugins supported: calico, flannel, kube-router, cilium, kube-ovn</span>
+</span></span><span class="line"><span class="cl"><span class="nv">CLUSTER_NETWORK</span><span class="o">=</span><span class="s2">&#34;calico&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Service proxy mode of kube-proxy: &#39;iptables&#39; or &#39;ipvs&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">PROXY_MODE</span><span class="o">=</span><span class="s2">&#34;ipvs&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># K8S Service CIDR, not overlap with node(host) networking</span>
+</span></span><span class="line"><span class="cl"><span class="nv">SERVICE_CIDR</span><span class="o">=</span><span class="s2">&#34;10.68.0.0/16&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Cluster CIDR (Pod CIDR), not overlap with node(host) networking</span>
+</span></span><span class="line"><span class="cl"><span class="nv">CLUSTER_CIDR</span><span class="o">=</span><span class="s2">&#34;172.20.0.0/16&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># NodePort Range</span>
+</span></span><span class="line"><span class="cl"><span class="nv">NODE_PORT_RANGE</span><span class="o">=</span><span class="s2">&#34;30000-32767&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Cluster DNS Domain</span>
+</span></span><span class="line"><span class="cl"><span class="nv">CLUSTER_DNS_DOMAIN</span><span class="o">=</span><span class="s2">&#34;cluster.local&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># -------- Additional Variables (don&#39;t change the default value right now) ---</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Binaries Directory</span>
+</span></span><span class="line"><span class="cl"><span class="nv">bin_dir</span><span class="o">=</span><span class="s2">&#34;/opt/kube/bin&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Deploy Directory (kubeasz workspace)</span>
+</span></span><span class="line"><span class="cl"><span class="nv">base_dir</span><span class="o">=</span><span class="s2">&#34;/etc/kubeasz&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Directory for a specific cluster</span>
+</span></span><span class="line"><span class="cl"><span class="nv">cluster_dir</span><span class="o">=</span><span class="s2">&#34;{{ base_dir }}/clusters/k8s-cluster01&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># CA and other components cert/key Directory</span>
+</span></span><span class="line"><span class="cl"><span class="nv">ca_dir</span><span class="o">=</span><span class="s2">&#34;/etc/kubernetes/ssl&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Default &#39;k8s_nodename&#39; is empty</span>
+</span></span><span class="line"><span class="cl"><span class="nv">k8s_nodename</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Default python interpreter</span>
+</span></span><span class="line"><span class="cl"><span class="nv">ansible_python_interpreter</span><span class="o">=</span>/usr/bin/python
+</span></span></code></pre></div><p>config.yml 是用于配置 K8S 集群的具体配置</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">vim /etc/kubeasz/clusters/k8s-cluster01/config.yml <span class="c1">#修改为以下配置，注意修改master的IP以及DNS相关配置、images配置等</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">############################</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># prepare</span>
+</span></span><span class="line"><span class="cl"><span class="c1">############################</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 可选离线安装系统软件包 (offline|online)</span>
+</span></span><span class="line"><span class="cl">INSTALL_SOURCE: <span class="s2">&#34;online&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 可选进行系统安全加固 github.com/dev-sec/ansible-collection-hardening</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># (deprecated) 未更新上游项目，未验证最新k8s集群安装，不建议启用</span>
+</span></span><span class="line"><span class="cl">OS_HARDEN: <span class="nb">false</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">############################</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># role:deploy</span>
+</span></span><span class="line"><span class="cl"><span class="c1">############################</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># default: ca will expire in 100 years</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># default: certs issued by the ca will expire in 50 years</span>
+</span></span><span class="line"><span class="cl">CA_EXPIRY: <span class="s2">&#34;876000h&#34;</span>
+</span></span><span class="line"><span class="cl">CERT_EXPIRY: <span class="s2">&#34;876000h&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># force to recreate CA and other certs, not suggested to set &#39;true&#39;</span>
+</span></span><span class="line"><span class="cl">CHANGE_CA: <span class="nb">false</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># kubeconfig 配置参数</span>
+</span></span><span class="line"><span class="cl">CLUSTER_NAME: <span class="s2">&#34;cluster1&#34;</span>
+</span></span><span class="line"><span class="cl">CONTEXT_NAME: <span class="s2">&#34;context-{{ CLUSTER_NAME }}&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># k8s version</span>
+</span></span><span class="line"><span class="cl">K8S_VER: <span class="s2">&#34;1.30.1&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># set unique &#39;k8s_nodename&#39; for each node, if not set(default:&#39;&#39;) ip add will be used</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># CAUTION: &#39;k8s_nodename&#39; must consist of lower case alphanumeric characters, &#39;-&#39; or &#39;.&#39;,</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># and must start and end with an alphanumeric character (e.g. &#39;example.com&#39;),</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># regex used for validation is &#39;[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*&#39;</span>
+</span></span><span class="line"><span class="cl">K8S_NODENAME: <span class="s2">&#34;{%- if k8s_nodename != &#39;&#39; -%} \
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    {{ k8s_nodename|replace(&#39;_&#39;, &#39;-&#39;)|lower }} \
+</span></span></span><span class="line"><span class="cl"><span class="s2">               {%- else -%} \
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    k8s-{{ inventory_hostname|replace(&#39;.&#39;, &#39;-&#39;) }} \
+</span></span></span><span class="line"><span class="cl"><span class="s2">               {%- endif -%}&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># use &#39;K8S_NODENAME&#39; to set hostname</span>
+</span></span><span class="line"><span class="cl">ENABLE_SETTING_HOSTNAME: <span class="nb">true</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">############################</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># role:etcd</span>
+</span></span><span class="line"><span class="cl"><span class="c1">############################</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 设置不同的wal目录，可以避免磁盘io竞争，提高性能</span>
+</span></span><span class="line"><span class="cl">ETCD_DATA_DIR: <span class="s2">&#34;/var/lib/etcd&#34;</span>
+</span></span><span class="line"><span class="cl">ETCD_WAL_DIR: <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">############################</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># role:runtime [containerd,docker]</span>
+</span></span><span class="line"><span class="cl"><span class="c1">############################</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># [.]启用拉取加速镜像仓库</span>
+</span></span><span class="line"><span class="cl">ENABLE_MIRROR_REGISTRY: <span class="nb">true</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># [.]添加信任的私有仓库</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 必须按照如下示例格式，协议头&#39;http://&#39;和&#39;https://&#39;不能省略</span>
+</span></span><span class="line"><span class="cl">INSECURE_REG:
+</span></span><span class="line"><span class="cl">  - <span class="s2">&#34;http://easzlab.io.local:5000&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># [.]基础容器镜像</span>
+</span></span><span class="line"><span class="cl">SANDBOX_IMAGE: <span class="s2">&#34;easzlab.io.local:5000/easzlab/pause:3.9&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># [containerd]容器持久化存储目录</span>
+</span></span><span class="line"><span class="cl">CONTAINERD_STORAGE_DIR: <span class="s2">&#34;/var/lib/containerd&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># [docker]容器存储目录</span>
+</span></span><span class="line"><span class="cl">DOCKER_STORAGE_DIR: <span class="s2">&#34;/var/lib/docker&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># [docker]开启Restful API</span>
+</span></span><span class="line"><span class="cl">DOCKER_ENABLE_REMOTE_API: <span class="nb">false</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">############################</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># role:kube-master</span>
+</span></span><span class="line"><span class="cl"><span class="c1">############################</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># k8s 集群 master 节点证书配置，可以添加多个ip和域名（比如增加公网ip和域名）</span>
+</span></span><span class="line"><span class="cl">MASTER_CERT_HOSTS:
+</span></span><span class="line"><span class="cl">  - <span class="s2">&#34;192.168.3.100&#34;</span>
+</span></span><span class="line"><span class="cl">  - <span class="s2">&#34;192.168.3.101&#34;</span>
+</span></span><span class="line"><span class="cl">  - <span class="s2">&#34;192.168.3.104&#34;</span>
+</span></span><span class="line"><span class="cl">  - <span class="s2">&#34;master1&#34;</span>
+</span></span><span class="line"><span class="cl">  - <span class="s2">&#34;master2&#34;</span>
+</span></span><span class="line"><span class="cl">  - <span class="s2">&#34;master3&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">#- &#34;www.test.com&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># node 节点上 pod 网段掩码长度（决定每个节点最多能分配的pod ip地址）</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 如果flannel 使用 --kube-subnet-mgr 参数，那么它将读取该设置为每个节点分配pod网段</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># https://github.com/coreos/flannel/issues/847</span>
+</span></span><span class="line"><span class="cl">NODE_CIDR_LEN: <span class="m">24</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">############################</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># role:kube-node</span>
+</span></span><span class="line"><span class="cl"><span class="c1">############################</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Kubelet 根目录</span>
+</span></span><span class="line"><span class="cl">KUBELET_ROOT_DIR: <span class="s2">&#34;/var/lib/kubelet&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># node节点最大pod 数</span>
+</span></span><span class="line"><span class="cl">MAX_PODS: <span class="m">110</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 配置为kube组件（kubelet,kube-proxy,dockerd等）预留的资源量</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 数值设置详见templates/kubelet-config.yaml.j2</span>
+</span></span><span class="line"><span class="cl">KUBE_RESERVED_ENABLED: <span class="s2">&#34;no&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># k8s 官方不建议草率开启 system-reserved, 除非你基于长期监控，了解系统的资源占用状况；</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 并且随着系统运行时间，需要适当增加资源预留，数值设置详见templates/kubelet-config.yaml.j2</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 系统预留设置基于 4c/8g 虚机，最小化安装系统服务，如果使用高性能物理机可以适当增加预留</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 另外，集群安装时候apiserver等资源占用会短时较大，建议至少预留1g内存</span>
+</span></span><span class="line"><span class="cl">SYS_RESERVED_ENABLED: <span class="s2">&#34;no&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">############################</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># role:network [flannel,calico,cilium,kube-ovn,kube-router]</span>
+</span></span><span class="line"><span class="cl"><span class="c1">############################</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ------------------------------------------- flannel</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># [flannel]设置flannel 后端&#34;host-gw&#34;,&#34;vxlan&#34;等</span>
+</span></span><span class="line"><span class="cl">FLANNEL_BACKEND: <span class="s2">&#34;vxlan&#34;</span>
+</span></span><span class="line"><span class="cl">DIRECT_ROUTING: <span class="nb">false</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># [flannel]</span>
+</span></span><span class="line"><span class="cl">flannel_ver: <span class="s2">&#34;v0.22.2&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ------------------------------------------- calico</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># [calico] IPIP隧道模式可选项有: [Always, CrossSubnet, Never],跨子网可以配置为Always与CrossSubnet(公有云建议使用always比较省事，其他的话需要修改各自公有云的网络配置，具体可以参考各个公有云说明)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 其次CrossSubnet为隧道+BGP路由混合模式可以提升网络性能，同子网配置为Never即可.</span>
+</span></span><span class="line"><span class="cl">CALICO_IPV4POOL_IPIP: <span class="s2">&#34;Always&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># [calico]设置 calico-node使用的host IP，bgp邻居通过该地址建立，可手工指定也可以自动发现</span>
+</span></span><span class="line"><span class="cl">IP_AUTODETECTION_METHOD: <span class="s2">&#34;can-reach={{ groups[&#39;kube_master&#39;][0] }}&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># [calico]设置calico 网络 backend: bird, vxlan, none</span>
+</span></span><span class="line"><span class="cl">CALICO_NETWORKING_BACKEND: <span class="s2">&#34;bird&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># [calico]设置calico 是否使用route reflectors</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 如果集群规模超过50个节点，建议启用该特性</span>
+</span></span><span class="line"><span class="cl">CALICO_RR_ENABLED: <span class="nb">false</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># CALICO_RR_NODES 配置route reflectors的节点，如果未设置默认使用集群master节点</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># CALICO_RR_NODES: [&#34;192.168.1.1&#34;, &#34;192.168.1.2&#34;]</span>
+</span></span><span class="line"><span class="cl">CALICO_RR_NODES: <span class="o">[]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># [calico]更新支持calico 版本: [&#34;3.19&#34;, &#34;3.23&#34;]</span>
+</span></span><span class="line"><span class="cl">calico_ver: <span class="s2">&#34;v3.26.4&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># [calico]calico 主版本</span>
+</span></span><span class="line"><span class="cl">calico_ver_main: <span class="s2">&#34;{{ calico_ver.split(&#39;.&#39;)[0] }}.{{ calico_ver.split(&#39;.&#39;)[1] }}&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ------------------------------------------- cilium</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># [cilium]镜像版本</span>
+</span></span><span class="line"><span class="cl">cilium_ver: <span class="s2">&#34;1.15.5&#34;</span>
+</span></span><span class="line"><span class="cl">cilium_connectivity_check: <span class="nb">true</span>
+</span></span><span class="line"><span class="cl">cilium_hubble_enabled: <span class="nb">false</span>
+</span></span><span class="line"><span class="cl">cilium_hubble_ui_enabled: <span class="nb">false</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ------------------------------------------- kube-ovn</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># [kube-ovn]离线镜像tar包</span>
+</span></span><span class="line"><span class="cl">kube_ovn_ver: <span class="s2">&#34;v1.11.5&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ------------------------------------------- kube-router</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># [kube-router]公有云上存在限制，一般需要始终开启 ipinip；自有环境可以设置为 &#34;subnet&#34;</span>
+</span></span><span class="line"><span class="cl">OVERLAY_TYPE: <span class="s2">&#34;full&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># [kube-router]NetworkPolicy 支持开关</span>
+</span></span><span class="line"><span class="cl">FIREWALL_ENABLE: <span class="nb">true</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># [kube-router]kube-router 镜像版本</span>
+</span></span><span class="line"><span class="cl">kube_router_ver: <span class="s2">&#34;v1.5.4&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">############################</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># role:cluster-addon</span>
+</span></span><span class="line"><span class="cl"><span class="c1">############################</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># coredns 自动安装</span>
+</span></span><span class="line"><span class="cl">dns_install: <span class="s2">&#34;yes&#34;</span>
+</span></span><span class="line"><span class="cl">corednsVer: <span class="s2">&#34;1.11.1&#34;</span>
+</span></span><span class="line"><span class="cl">ENABLE_LOCAL_DNS_CACHE: <span class="nb">true</span>
+</span></span><span class="line"><span class="cl">dnsNodeCacheVer: <span class="s2">&#34;1.22.28&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 设置 local dns cache 地址</span>
+</span></span><span class="line"><span class="cl">LOCAL_DNS_CACHE: <span class="s2">&#34;169.254.20.10&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># metric server 自动安装</span>
+</span></span><span class="line"><span class="cl">metricsserver_install: <span class="s2">&#34;yes&#34;</span>
+</span></span><span class="line"><span class="cl">metricsVer: <span class="s2">&#34;v0.7.1&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># dashboard 自动安装</span>
+</span></span><span class="line"><span class="cl">dashboard_install: <span class="s2">&#34;yes&#34;</span>
+</span></span><span class="line"><span class="cl">dashboardVer: <span class="s2">&#34;v2.7.0&#34;</span>
+</span></span><span class="line"><span class="cl">dashboardMetricsScraperVer: <span class="s2">&#34;v1.0.8&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># prometheus 自动安装</span>
+</span></span><span class="line"><span class="cl">prom_install: <span class="s2">&#34;no&#34;</span>
+</span></span><span class="line"><span class="cl">prom_namespace: <span class="s2">&#34;monitor&#34;</span>
+</span></span><span class="line"><span class="cl">prom_chart_ver: <span class="s2">&#34;45.23.0&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># kubeapps 自动安装，如果选择安装，默认同时安装local-storage（提供storageClass: &#34;local-path&#34;）</span>
+</span></span><span class="line"><span class="cl">kubeapps_install: <span class="s2">&#34;no&#34;</span>
+</span></span><span class="line"><span class="cl">kubeapps_install_namespace: <span class="s2">&#34;kubeapps&#34;</span>
+</span></span><span class="line"><span class="cl">kubeapps_working_namespace: <span class="s2">&#34;default&#34;</span>
+</span></span><span class="line"><span class="cl">kubeapps_storage_class: <span class="s2">&#34;local-path&#34;</span>
+</span></span><span class="line"><span class="cl">kubeapps_chart_ver: <span class="s2">&#34;12.4.3&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># local-storage (local-path-provisioner) 自动安装</span>
+</span></span><span class="line"><span class="cl">local_path_provisioner_install: <span class="s2">&#34;no&#34;</span>
+</span></span><span class="line"><span class="cl">local_path_provisioner_ver: <span class="s2">&#34;v0.0.26&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 设置默认本地存储路径</span>
+</span></span><span class="line"><span class="cl">local_path_provisioner_dir: <span class="s2">&#34;/opt/local-path-provisioner&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># nfs-provisioner 自动安装</span>
+</span></span><span class="line"><span class="cl">nfs_provisioner_install: <span class="s2">&#34;no&#34;</span>
+</span></span><span class="line"><span class="cl">nfs_provisioner_namespace: <span class="s2">&#34;kube-system&#34;</span>
+</span></span><span class="line"><span class="cl">nfs_provisioner_ver: <span class="s2">&#34;v4.0.2&#34;</span>
+</span></span><span class="line"><span class="cl">nfs_storage_class: <span class="s2">&#34;managed-nfs-storage&#34;</span>
+</span></span><span class="line"><span class="cl">nfs_server: <span class="s2">&#34;192.168.1.10&#34;</span>
+</span></span><span class="line"><span class="cl">nfs_path: <span class="s2">&#34;/data/nfs&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># network-check 自动安装</span>
+</span></span><span class="line"><span class="cl">network_check_enabled: <span class="nb">false</span>
+</span></span><span class="line"><span class="cl">network_check_schedule: <span class="s2">&#34;*/5 * * * *&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">############################</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># role:harbor</span>
+</span></span><span class="line"><span class="cl"><span class="c1">############################</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># harbor version，完整版本号</span>
+</span></span><span class="line"><span class="cl">HARBOR_VER: <span class="s2">&#34;v2.10.2&#34;</span>
+</span></span><span class="line"><span class="cl">HARBOR_DOMAIN: <span class="s2">&#34;harbor.easzlab.io.local&#34;</span>
+</span></span><span class="line"><span class="cl">HARBOR_PATH: /var/data
+</span></span><span class="line"><span class="cl">HARBOR_TLS_PORT: <span class="m">8443</span>
+</span></span><span class="line"><span class="cl">HARBOR_REGISTRY: <span class="s2">&#34;{{ HARBOR_DOMAIN }}:{{ HARBOR_TLS_PORT }}&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># if set &#39;false&#39;, you need to put certs named harbor.pem and harbor-key.pem in directory &#39;down&#39;</span>
+</span></span><span class="line"><span class="cl">HARBOR_SELF_SIGNED_CERT: <span class="nb">true</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># install extra component</span>
+</span></span><span class="line"><span class="cl">HARBOR_WITH_TRIVY: <span class="nb">false</span>
+</span></span></code></pre></div><ul>
+<li>部署</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">root@kubeasz:/etc/kubeasz# ./ezctl --help <span class="c1">#查看具体安装步骤，依次按顺序执行来部署k8s各组件，具体每步含义可参考官网</span>
+</span></span><span class="line"><span class="cl">Usage: ezctl COMMAND <span class="o">[</span>args<span class="o">]</span>
+</span></span><span class="line"><span class="cl">-------------------------------------------------------------------------------------
+</span></span><span class="line"><span class="cl">Cluster setups:
+</span></span><span class="line"><span class="cl">    list                   to list all of the managed clusters
+</span></span><span class="line"><span class="cl">    checkout    &lt;cluster&gt;            to switch default kubeconfig of the cluster
+</span></span><span class="line"><span class="cl">    new         &lt;cluster&gt;            to start a new k8s deploy with name <span class="s1">&#39;cluster&#39;</span>
+</span></span><span class="line"><span class="cl">    setup       &lt;cluster&gt;  &lt;step&gt;    to setup a cluster, also supporting a step-by-step way
+</span></span><span class="line"><span class="cl">    start       &lt;cluster&gt;            to start all of the k8s services stopped by <span class="s1">&#39;ezctl stop&#39;</span>
+</span></span><span class="line"><span class="cl">    stop        &lt;cluster&gt;            to stop all of the k8s services temporarily
+</span></span><span class="line"><span class="cl">    upgrade     &lt;cluster&gt;            to upgrade the k8s cluster
+</span></span><span class="line"><span class="cl">    destroy     &lt;cluster&gt;            to destroy the k8s cluster
+</span></span><span class="line"><span class="cl">    backup      &lt;cluster&gt;            to backup the cluster state <span class="o">(</span>etcd snapshot<span class="o">)</span>
+</span></span><span class="line"><span class="cl">    restore     &lt;cluster&gt;            to restore the cluster state from backups
+</span></span><span class="line"><span class="cl">    start-aio              to quickly setup an all-in-one cluster with default settings
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Cluster ops:
+</span></span><span class="line"><span class="cl">    add-etcd    &lt;cluster&gt;  &lt;ip&gt;      to add a etcd-node to the etcd cluster
+</span></span><span class="line"><span class="cl">    add-master  &lt;cluster&gt;  &lt;ip&gt;      to add a master node to the k8s cluster
+</span></span><span class="line"><span class="cl">    add-node    &lt;cluster&gt;  &lt;ip&gt;      to add a work node to the k8s cluster
+</span></span><span class="line"><span class="cl">    del-etcd    &lt;cluster&gt;  &lt;ip&gt;      to delete a etcd-node from the etcd cluster
+</span></span><span class="line"><span class="cl">    del-master  &lt;cluster&gt;  &lt;ip&gt;      to delete a master node from the k8s cluster
+</span></span><span class="line"><span class="cl">    del-node    &lt;cluster&gt;  &lt;ip&gt;      to delete a work node from the k8s cluster
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Extra operation:
+</span></span><span class="line"><span class="cl">    kca-renew   &lt;cluster&gt;            to force renew CA certs and all the other certs <span class="o">(</span>with caution<span class="o">)</span>
+</span></span><span class="line"><span class="cl">    kcfg-adm    &lt;cluster&gt;  &lt;args&gt;    to manage client kubeconfig of the k8s cluster
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Use <span class="s2">&#34;ezctl help &lt;command&gt;&#34;</span> <span class="k">for</span> more information about a given command.
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">./ezctl setup k8s-cluster01 all   <span class="c1"># 安装第一步到第七步</span>
+</span></span></code></pre></div><p>等待安装完成。</p>
+<ul>
+<li>获取集群节点信息</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># 部署节点执行</span>
+</span></span><span class="line"><span class="cl">kubectl get nodes
+</span></span><span class="line"><span class="cl">NAME       STATUS                     ROLES    AGE   VERSION
+</span></span><span class="line"><span class="cl">master01   Ready,SchedulingDisabled   master   20m   v1.30.1
+</span></span><span class="line"><span class="cl">master02   Ready,SchedulingDisabled   master   20m   v1.30.1
+</span></span><span class="line"><span class="cl">master03   Ready,SchedulingDisabled   master   20m   v1.30.1
+</span></span><span class="line"><span class="cl">node01     Ready                      node     20m   v1.30.1
+</span></span><span class="line"><span class="cl">node02     Ready                      node     20m   v1.30.1
+</span></span></code></pre></div><p>将部署节点 ~/.kube 目录下的文件拷贝到 master1 master2 master3 的 ~/.kube 目录下，并验证.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">scp -r /root/.kube/* 192.168.3.100:/root/.kube
+</span></span><span class="line"><span class="cl">scp -r /root/.kube/* 192.168.3.101:/root/.kube
+</span></span><span class="line"><span class="cl">scp -r /root/.kube/* 192.168.3.104:/root/.kube
+</span></span></code></pre></div><ul>
+<li>master1</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">root@master01:~# kubectl get nodes
+</span></span><span class="line"><span class="cl">NAME       STATUS                     ROLES    AGE     VERSION
+</span></span><span class="line"><span class="cl">master01   Ready,SchedulingDisabled   master   9m37s   v1.30.1
+</span></span><span class="line"><span class="cl">master02   Ready,SchedulingDisabled   master   9m37s   v1.30.1
+</span></span><span class="line"><span class="cl">master03   Ready,SchedulingDisabled   master   9m37s   v1.30.1
+</span></span><span class="line"><span class="cl">node01     Ready                      node     8m56s   v1.30.1
+</span></span><span class="line"><span class="cl">node02     Ready                      node     8m56s   v1.30.1
+</span></span></code></pre></div><ul>
+<li>master2</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">root@master02:~# kubectl get nodes
+</span></span><span class="line"><span class="cl">NAME       STATUS                     ROLES    AGE     VERSION
+</span></span><span class="line"><span class="cl">master01   Ready,SchedulingDisabled   master   10m     v1.30.1
+</span></span><span class="line"><span class="cl">master02   Ready,SchedulingDisabled   master   10m     v1.30.1
+</span></span><span class="line"><span class="cl">master03   Ready,SchedulingDisabled   master   10m     v1.30.1
+</span></span><span class="line"><span class="cl">node01     Ready                      node     9m45s   v1.30.1
+</span></span><span class="line"><span class="cl">node02     Ready                      node     9m45s   v1.30.1
+</span></span></code></pre></div><ul>
+<li>master3</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">root@master03:~# kubectl get nodes
+</span></span><span class="line"><span class="cl">NAME       STATUS                     ROLES    AGE   VERSION
+</span></span><span class="line"><span class="cl">master01   Ready,SchedulingDisabled   master   11m   v1.30.1
+</span></span><span class="line"><span class="cl">master02   Ready,SchedulingDisabled   master   11m   v1.30.1
+</span></span><span class="line"><span class="cl">master03   Ready,SchedulingDisabled   master   11m   v1.30.1
+</span></span><span class="line"><span class="cl">node01     Ready                      node     10m   v1.30.1
+</span></span><span class="line"><span class="cl">node02     Ready                      node     10m   v1.30.1
+</span></span></code></pre></div><ul>
+<li>修改 config 配置文件</li>
+</ul>
+<p>从部署节点拷贝的 config 配置文件中 server 字段的值指定了三个 master 节点之中的其中一个，保证高可用需要修改值，修改成</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">https://127.0.0.1:6443
+</span></span></code></pre></div><p>kubeasz 部署的集群会在每个节点部署一个 kube-lb，查看/etc/kube-lb/conf/kube-lb.conf</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">cat /etc/kube-lb/conf/kube-lb.conf
+</span></span><span class="line"><span class="cl">user root<span class="p">;</span>
+</span></span><span class="line"><span class="cl">worker_processes 1<span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">error_log  /etc/kube-lb/logs/error.log warn<span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">events <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    worker_connections  3000<span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">stream <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    upstream backend <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        server 192.168.3.100:6443    <span class="nv">max_fails</span><span class="o">=</span><span class="m">2</span> <span class="nv">fail_timeout</span><span class="o">=</span>3s<span class="p">;</span>
+</span></span><span class="line"><span class="cl">        server 192.168.3.101:6443    <span class="nv">max_fails</span><span class="o">=</span><span class="m">2</span> <span class="nv">fail_timeout</span><span class="o">=</span>3s<span class="p">;</span>
+</span></span><span class="line"><span class="cl">        server 192.168.3.104:6443    <span class="nv">max_fails</span><span class="o">=</span><span class="m">2</span> <span class="nv">fail_timeout</span><span class="o">=</span>3s<span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    server <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        listen 127.0.0.1:6443<span class="p">;</span>
+</span></span><span class="line"><span class="cl">        proxy_connect_timeout 1s<span class="p">;</span>
+</span></span><span class="line"><span class="cl">        proxy_pass backend<span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># 所有master节点都需要修改</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 修改前</span>
+</span></span><span class="line"><span class="cl">server: https://192.168.3.100:6443
+</span></span><span class="line"><span class="cl"><span class="c1"># 修改后</span>
+</span></span><span class="line"><span class="cl">server: https://127.0.0.1:6443
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 验证是否能访问api</span>
+</span></span><span class="line"><span class="cl">root@master01:~/.kube# kubectl get nodes
+</span></span><span class="line"><span class="cl">NAME       STATUS                     ROLES    AGE   VERSION
+</span></span><span class="line"><span class="cl">master01   Ready,SchedulingDisabled   master   22m   v1.30.1
+</span></span><span class="line"><span class="cl">master02   Ready,SchedulingDisabled   master   22m   v1.30.1
+</span></span><span class="line"><span class="cl">master03   Ready,SchedulingDisabled   master   22m   v1.30.1
+</span></span><span class="line"><span class="cl">node01     Ready                      node     22m   v1.30.1
+</span></span><span class="line"><span class="cl">node02     Ready                      node     22m   v1.30.1
+</span></span></code></pre></div><ul>
+<li>增加 master 节点
+操作步骤
+执行如下 (假设待增加节点为 192.168.3.128, 集群名称 k8s-cluster01)：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># 部署节点执行</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ssh 免密码登录</span>
+</span></span><span class="line"><span class="cl">$ ssh-copy-id 192.168.3.128
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 新增节点</span>
+</span></span><span class="line"><span class="cl">$ ezctl add-master k8s-cluster01 192.168.3.128
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 同理，重复上面步骤再新增节点并自定义nodename</span>
+</span></span><span class="line"><span class="cl">$ ezctl add-master k8s-cluster01 192.168.3.128 <span class="nv">k8s_nodename</span><span class="o">=</span>master-03
+</span></span></code></pre></div><ul>
+<li>增加 kube_node 节点</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">操作步骤
+</span></span><span class="line"><span class="cl">执行如下 <span class="o">(</span>假设待增加节点为 192.168.3.129，k8s集群名为 k8s-cluster01<span class="o">)</span>：
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ssh 免密码登录</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 部署节点执行</span>
+</span></span><span class="line"><span class="cl">$ ssh-copy-id 192.168.3.129
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 新增节点</span>
+</span></span><span class="line"><span class="cl">$ ezctl add-node test-k8s 192.168.3.129
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 同理，重复上面步骤再新增节点并自定义nodename</span>
+</span></span><span class="line"><span class="cl">$ ezctl add-node test-k8s 192.168.1.129 <span class="nv">k8s_nodename</span><span class="o">=</span>worker-03
+</span></span></code></pre></div>
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/kubernetes/">Kubernetes</a>
+        
+            <a href="/tags/kubeasz/">Kubeasz</a>
+        
+    </section>
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title"></h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image no-copy">
+    <a href="/p/250106/">
+        
+        
+            <div class="article-image">
+                <img src="/p/250106/index.6d23038c55374ba08d6ff8e1d42f7bb8_hu6f81351f3fdcc670c9eb8871fc301ff4_225799_700x420_fill_box_smart1_3.png" 
+                        width="700" 
+                        height="420" 
+                        loading="lazy"
+                        alt="Featured image of post Kubernetes修改CoreDNS配置文件解析内部域名"
+                        data-key="250106" 
+                        data-hash="md5-bSMDjFU3S6CNb/jh1C97uA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Kubernetes修改CoreDNS配置文件解析内部域名</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image no-copy">
+    <a href="/p/250103/">
+        
+        
+            <div class="article-image">
+                <img src="/p/250103/index.96b88b03c507359d91f9d6e1c993f70c_hu277670ebf48d1569abc5f98bf44614ba_48446_700x420_fill_box_smart1_3.png" 
+                        width="700" 
+                        height="420" 
+                        loading="lazy"
+                        alt="Featured image of post Kubernetes通过配置 hostAliases 来进行内网域名解析"
+                        data-key="250103" 
+                        data-hash="md5-lriLA8UHNZ2R&#43;dbhyZP3DA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Kubernetes通过配置 hostAliases 来进行内网域名解析</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        <script>
+  twikoo.init({
+    envId: "",
+    el: "#tcomment",
+  });
+</script>
+    
+    <div id="skip">
+        <div class="skip-top">
+          <a href="#top" class="skip-top" title="返回顶部">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<title id="chevronUpIconTitle">返回顶部</title> 
+<polyline points="6 14 12 8 18 14 18 14"/> 
+</svg>
+          </a>
+        </div>
+        
+    </div>
+    <script>
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        const scrollToggleBtn = document.querySelector('#skip');
+
+        const handleScrollDebounced = debounce(function() {
+            scrollToggleBtn.classList.remove('hidden');
+        }, 1000);
+
+        window.addEventListener('scroll', () => {
+            scrollToggleBtn.classList.add('hidden');
+            handleScrollDebounced();
+        });
+    </script>
+
+                    <script type="text/javascript" src="/ts/main.js" defer></script>
+
+  <script src="/js/lightbox-plus-jquery.js"></script>
+
+  <script src="/js/pieces.js"></script>
+
+  <script src="/js/twikoo.js"></script>
+
+
+
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+                </div>
+                
+                    <div class="article-sidebar">
+                        <aside class="right-sidebar">
+    <form action="/search/" class="search-form" >
+        <p>
+            <input name="keyword" required placeholder="" />
+        
+            <button title="">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+            </button>
+        </p>
+    </form>
+    <div class="info-widget no-copy widget--card">
+    <div class="info-bg">
+    </div>
+  
+    <div class="site-avatar">
+      <img src="/images/apple-touch-icon.png" alt="" />
+    </div>
+  
+    <div class="site-meta">
+      <p class="site-name">运维匠</p>
+      <p class="site-description">运维经验技术分享</p>
+    </div>
+    <div class="social">
+      
+      
+    </div>
+  </div>
+    
+
+    <div class="sticky">
+  
+<div class="widget--toc no-copy">
+  <h2>📑 目录</h2>
+  <nav id="TableOfContents">
+  <ol>
+    <li><a href="#部署结构">部署结构</a></li>
+    <li><a href="#软件清单">软件清单</a></li>
+    <li><a href="#kubeasz-部署高可用-kubernetes">kubeasz 部署高可用 kubernetes</a></li>
+  </ol>
+</nav>
+</div>
+
+  <div class="random-posts widget--card">
+    <h2>📄 随机文章</h2>
+    <button id="random-btn" onclick="loadRandomPosts()" class="">
+        <svg role="img" xmlns="http://www.w3.org/2000/svg" width="48px" height="48px" viewBox="0 0 24 24" aria-labelledby="refreshIconTitle" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" fill="none">
+<polyline points="22 12 19 15 16 12"/> 
+<path d="M11,20 C6.581722,20 3,16.418278 3,12 C3,7.581722 6.581722,4 11,4 C15.418278,4 19,7.581722 19,12 L19,14"/> 
+</svg>
+    </button>
+    <div id="random-posts"></div>
+</div>
+
+<script>
+    function loadRandomPosts() {
+        const btn = document.getElementById('random-btn');
+        btn.classList.add('rotate');  
+        btn.addEventListener('animationend', function() {
+            btn.classList.remove('rotate');  
+        });
+        fetch('/random.json')  
+            .then(response => response.json())
+            .then(data => {
+                const postsContainer = document.getElementById('random-posts');
+                postsContainer.innerHTML = ''; 
+                const shuffled = data.articles.sort(() => 0.5 - Math.random()); 
+                shuffled.slice(0, 5).forEach(post => { 
+                    const postElement = document.createElement('div');
+                    postElement.innerHTML = `
+                    <a href="${post.url}">
+                        <div class="random-post">
+                            <div class="random-post-img">
+                                <img src="${post.image}" alt="${post.title}">
+                            </div>
+                            <div class="random-post-content">
+                                <h3>${post.title}</h3>
+                                <p>${new Date(post.date).toLocaleDateString()}</p>
+                            </div>
+                        </div>
+                    </a>
+                    `;
+                    postsContainer.appendChild(postElement);
+                });
+            });
+    }
+    
+    
+    loadRandomPosts();
+    </script>
+    
+  
+<section class="tagcloud--widget widget--card">
+    <h2>🔖 标签</h2>
+
+    <div class="tagcloud-tags">
+        
+            
+                
+                <a href="/tags/jenkins/" class="tagCloud-tag">
+                    #jenkins<span class="tagcloud-count">1</span>
+                </a>
+            
+                
+                <a href="/tags/kubeasz/" class="tagCloud-tag">
+                    #kubeasz<span class="tagcloud-count">1</span>
+                </a>
+            
+                
+                <a href="/tags/kubernetes/" class="tagCloud-tag">
+                    #kubernetes<span class="tagcloud-count">1</span>
+                </a>
+            
+                
+                <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/" class="tagCloud-tag">
+                    #云原生<span class="tagcloud-count">4</span>
+                </a>
+            
+        
+    </div>
+<section>
+
+
+</div>
+</aside>
+
+                    </div>
+                
+            </main>
+        </div><footer class="site-footer no-copy">
+    <div class="footer-info">
+        <div class="left-footer">
+            <section class="copyright">
+                &copy; 
+                
+                    2023 - 
+                
+                2025 运维匠-运维工程师知识分享经验和最佳实践
+            </section>
+            <section class="static">
+                
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                共创作了14篇文章，60.10k字
+            </section>
+        </div>
+        <div class="right-footer">
+            <section class="time">
+                本站已运行<SPAN id=span_dt_dt></SPAN>
+            </section>
+            <section class="link-info">
+                <span class="RSS">
+                    <a href="https://gohugo.io/" target="_blank">Hugo</a>
+                </span>
+                
+                
+                
+                
+
+            </section>
+        </div>
+    </div>
+</footer>
+
+<SCRIPT language=javascript>
+    function show_date_time(){
+    window.setTimeout("show_date_time()", 1000);
+    BirthDay=new Date("12\/04\/2023 00:00:00");
+    today=new Date();
+    timeold=(today.getTime()-BirthDay.getTime());
+    sectimeold=timeold/1000
+    secondsold=Math.floor(sectimeold);
+    msPerDay=24*60*60*1000
+    e_daysold=timeold/msPerDay
+    daysold=Math.floor(e_daysold);
+    e_hrsold=(e_daysold-daysold)*24;
+    hrsold=Math.floor(e_hrsold);
+    e_minsold=(e_hrsold-hrsold)*60;
+    minsold=Math.floor((e_hrsold-hrsold)*60);
+    seconds=Math.floor((e_minsold-minsold)*60);
+    span_dt_dt.innerHTML=""+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+    }
+    show_date_time();
+</SCRIPT></body>
+    <script>
+    
+    var toggleButton = document.getElementById('toggleButton');
+    var closeButton = document.getElementById('closeButton');
+    var sidebar = document.getElementById('left-sidebar');
+    var overlay = document.querySelector('.overlay');
+
+    
+    toggleButton.addEventListener('click', function() {
+        sidebar.style.left = '0';
+        overlay.style.display = 'block';
+    });
+
+    
+    closeButton.addEventListener('click', function() {
+        sidebar.style.left = '-500px';
+        overlay.style.display = 'none';
+    });
+    </script>
+</html>

@@ -1,3 +1,0 @@
-User-agent: *
-Disallow:
-Sitemap: https://old.colorfulgz.com/sitemap.xml

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Pages on 运维匠-运维工程师知识分享经验和最佳实践</title>
+        <link>https://www.colorfulgz.com/page/</link>
+        <description>Recent content in Pages on 运维匠-运维工程师知识分享经验和最佳实践</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <copyright>运维匠-运维工程师知识分享经验和最佳实践</copyright><atom:link href="https://www.colorfulgz.com/page/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>归档</title>
+        <link>https://www.colorfulgz.com/archives/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>https://www.colorfulgz.com/archives/</guid>
+        <description>&lt;img src="https://www.colorfulgz.com/images/banner/banner-1.svg" alt="Featured image of post 归档" /&gt;</description>
+        </item>
+        <item>
+        <title>搜索</title>
+        <link>https://www.colorfulgz.com/search/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>https://www.colorfulgz.com/search/</guid>
+        <description></description>
+        </item>
+        
+    </channel>
+</rss>
